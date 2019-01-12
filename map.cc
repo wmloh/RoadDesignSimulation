@@ -23,36 +23,40 @@ Ground Map::toTiles() {
 	std::vector<TilePtr> row;
 
 	try {
-		while(getline(mapFs, line)) {
-			getline(profFs, profile);
+		while(std::getline(mapFs, line)) {
+			std::getline(profFs, profile);
 			len = line.length();
-
 			row.clear();
 			for(int i = 0; i < len; ++i) {
-				if(line[i] == '*') {
-					row.emplace_back(std::move(std::make_unique<Obst>(i, rowCount)));
+				if(line[i] == '%') {
+					row.emplace_back(std::make_unique<Obst>(i, rowCount));
 				} else if(line[i] == ' ') {
-					row.emplace_back(std::move(std::make_unique<Empty>(i, rowCount)));
+					row.emplace_back(std::make_unique<Empty>(i, rowCount));
 				} else if(line[i] == 'H') {
-					row.emplace_back(std::move(std::make_unique<Home>(i, rowCount)));
+					row.emplace_back(std::make_unique<Home>(i, rowCount));
 				} else if(line[i] == 'h') {
-					row.emplace_back(std::move(std::make_unique<Hub>(i, rowCount)));
+					row.emplace_back(std::make_unique<Hub>(i, rowCount));
 				} else if(line[i] == '+') {
-					row.emplace_back(std::move(std::make_unique<Road>(i, rowCount, profile[i])));
+					row.emplace_back(std::make_unique<Road>(i, rowCount, profile[i] - '0'));
 				} else if(line[i] == '@') {
-					row.emplace_back(std::move(std::make_unique<Car>(i, rowCount)));
+					row.emplace_back(std::make_unique<Car>(i, rowCount));
 					std::cerr << "A car is detected on the map; this will cause simulation to not work as expected" << std::endl;
-				} else {
-					throw "Unrecognized symbol detected on the map";
+				} else if(line[i] != '\r') {
+					throw "Unrecognized symbol detected on the map: " + line[i];
 				}
 			}
 			g.emplace_back(std::move(row));
 			++rowCount;
+			mapFs.clear();
+			profFs.clear();
 		}
 	} catch(std::string s) {
 		std::cerr << "Error probably caused by map and profile .txt file not matching." << std::endl;
 		throw;
+	} catch(...) {
+		std::cerr << "Unknown error occurred" << std::endl;
+		throw;
 	}
 	
-	return g;
+	return std::move(g);
 }

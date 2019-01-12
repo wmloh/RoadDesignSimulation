@@ -1,7 +1,7 @@
 #include "commandLoop.h"
 #include <fstream>
 
-CommandLoop::CommandLoop(): guide{}, legend{}, sim{}, stream{"cout"} {}
+CommandLoop::CommandLoop(): guide{}, legend{}, sim{} {}
 
 CommandLoop::~CommandLoop() {}
 
@@ -16,25 +16,32 @@ void CommandLoop::run() {
 			} else if (command == "legend") {
 				printLegend();
 			} else if (command == "init") {
-				// sim.init();
+				sim.init();
+				std::cout << "Simulation ended" << std::endl;
 			} else if (command == "setStream") {
 				std::cin >> second;
 				if(second == "cout") {
-					stream = "cout";
+					sim.setStream(second);
 				} else if(second == "file") {
 					std::cin >> second;
-					stream = second;
+					sim.setStream(second);
+				} else {
+					std::cout << "Invalid setStream command" << std::endl;
 				}
+			} else if (command == "show") {
+				std::cout << sim;
 			} else if (command == "exit") {
 				break;
 			} else {
-				std::cout << "Incorrect command; enter \"help\" for more information" << std::endl;
+				std::cout << "Invalid command; enter \"help\" for more information" << std::endl;
 			}
 		}
 	} catch(std::string s) {
 		std::cout << "Error occurred:" << std::endl << s << std::endl;
+		throw;
+	} catch(...) {
+		throw;
 	}
-
 }
 
 void CommandLoop::help() {
@@ -67,4 +74,8 @@ void CommandLoop::loadLegend(std::string fileName) {
 	while(std::getline(file, line)) {
 		legend.push_back(line);
 	}
+}
+
+void CommandLoop::loadFiles(std::string map, std::string profile) {
+	sim.load(map, profile);
 }

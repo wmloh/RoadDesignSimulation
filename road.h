@@ -14,6 +14,7 @@ public:
 	void moveCar();
 	void acceptCar(Car *);
 	int getCapacity();
+	virtual std::string print() override;
 };
 
 #endif

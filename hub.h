@@ -11,6 +11,7 @@ public:
 	Hub(int, int);
 	~Hub();
 	void sendCar();
+	virtual std::string print() override;
 };
 
 #endif

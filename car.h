@@ -9,4 +9,5 @@ public:
 	~Car();
 private:
 	void setRoad(Road *);
+	virtual std::string print() override;
 };

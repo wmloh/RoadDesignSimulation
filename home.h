@@ -11,6 +11,7 @@ public:
 	Home(int, int);
 	~Home();
 	void sendCar();
+	virtual std::string print() override;
 };
 
 #endif

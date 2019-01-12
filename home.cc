@@ -7,3 +7,7 @@ Home::~Home() {}
 void Home::sendCar() {
 	// send a car
 }
+
+std::string Home::print() {
+	return "H";
+}

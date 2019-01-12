@@ -5,8 +5,6 @@
 #include <vector>
 #include "tile.h"
 
-typedef std::vector<std::vector<TilePtr>> Ground;
-
 class Map {
 	std::string mapDir;
 	std::string profDir;

@@ -7,3 +7,7 @@ Hub::~Hub() {}
 void Hub::sendCar() {
 	// send a car
 }
+
+std::string Hub::print() {
+	return "h";
+}

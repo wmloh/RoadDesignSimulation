@@ -1,4 +1,4 @@
-* - obstacle
+% - obstacle
 + - road
 H - home
 h - hub

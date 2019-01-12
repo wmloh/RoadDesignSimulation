@@ -9,16 +9,20 @@
 class Tile;
 
 typedef std::unique_ptr<Tile> TilePtr;
+typedef std::vector<std::vector<TilePtr>> Ground;
 
 class Tile {
 	int x, y;
 	std::vector<Tile *> neighbours;
 public:
 	Tile(int, int);
-	~Tile();
+	virtual ~Tile() = 0;
 	std::vector<Tile *> getNeighbours();
 private:
 	void setNeighbours(std::vector<Tile *>);
+	friend std::ostream &operator<<(std::ostream &, Tile &);
+protected:
+	virtual std::string print() = 0;
 };
 
 #endif

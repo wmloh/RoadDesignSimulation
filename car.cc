@@ -7,3 +7,7 @@ Car::~Car() {}
 void Car::setRoad(Road * r) {
 	curRoad = r;
 }
+
+std::string Car::print() {
+	return "@";
+}

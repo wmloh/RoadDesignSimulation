@@ -7,6 +7,7 @@ class Obst final : public Tile {
 public:
 	Obst(int, int);
 	~Obst();
+	virtual std::string print() override;
 };
 
 #endif

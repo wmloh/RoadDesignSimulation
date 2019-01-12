@@ -15,3 +15,7 @@ void Road::acceptCar(Car *c) {
 int Road::getCapacity() {
 	return capacity;
 }
+
+std::string Road::print() {
+	return "+";
+}
