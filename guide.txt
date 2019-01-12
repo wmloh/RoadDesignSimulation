@@ -1,0 +1,5 @@
+* init   - Begins simulation
+* help   - Displays guide
+* legend - Displays legends in maps
+* exit   - Terminates program
+* setStream <cout | file <fileName>> - Sets output stream for simulation
