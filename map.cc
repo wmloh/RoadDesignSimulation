@@ -1,5 +1,4 @@
 #include "map.h"
-#include "tile.h"
 #include "obstacle.h"
 #include "empty.h"
 #include "home.h"
@@ -7,7 +6,6 @@
 #include "road.h"
 #include "car.h"
 #include <fstream>
-#include <unique>
 
 Map::Map(std::string mapDir, std::string profDir): mapDir{mapDir}, profDir{profDir} {}
 
@@ -20,8 +18,9 @@ Ground Map::toTiles() {
 	std::string line;
 	std::string profile;
 
+	int rowCount = 0;
 	int len;
-	std::vector<Tile *> row;
+	std::vector<TilePtr> row;
 
 	try {
 		while(getline(mapFs, line)) {
@@ -31,26 +30,27 @@ Ground Map::toTiles() {
 			row.clear();
 			for(int i = 0; i < len; ++i) {
 				if(line[i] == '*') {
-					row.push_back(std::make_unique<Obst>());
+					row.emplace_back(std::move(std::make_unique<Obst>(i, rowCount)));
 				} else if(line[i] == ' ') {
-					row.push_back(std::make_unique<Empty>());
+					row.emplace_back(std::move(std::make_unique<Empty>(i, rowCount)));
 				} else if(line[i] == 'H') {
-					row.push_back(std::make_unique<Home>());
+					row.emplace_back(std::move(std::make_unique<Home>(i, rowCount)));
 				} else if(line[i] == 'h') {
-					row.push_back(std::make_unique<Hub>());
+					row.emplace_back(std::move(std::make_unique<Hub>(i, rowCount)));
 				} else if(line[i] == '+') {
-					row.push_back(std::make_unique<Road>());
+					row.emplace_back(std::move(std::make_unique<Road>(i, rowCount, profile[i])));
 				} else if(line[i] == '@') {
-					row.push_back(std::make_unique<Car>());
+					row.emplace_back(std::move(std::make_unique<Car>(i, rowCount)));
 					std::cerr << "A car is detected on the map; this will cause simulation to not work as expected" << std::endl;
 				} else {
 					throw "Unrecognized symbol detected on the map";
 				}
 			}
-			g.push_back(row);
+			g.emplace_back(std::move(row));
+			++rowCount;
 		}
 	} catch(std::string s) {
-		std::cerr << "Error probably caused by map and profile .txt file not matching." << std::endl
+		std::cerr << "Error probably caused by map and profile .txt file not matching." << std::endl;
 		throw;
 	}
 	

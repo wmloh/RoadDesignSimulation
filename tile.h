@@ -1,4 +1,14 @@
+#ifndef TILE_H
+#define TILE_H
+
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <memory>
+
+class Tile;
+
+typedef std::unique_ptr<Tile> TilePtr;
 
 class Tile {
 	int x, y;
@@ -10,3 +20,5 @@ public:
 private:
 	void setNeighbours(std::vector<Tile *>);
 };
+
+#endif

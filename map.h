@@ -1,9 +1,11 @@
+#ifndef MAP_H
+#define MAP_H
+
 #include <iostream>
 #include <vector>
+#include "tile.h"
 
-class Tile;
-
-typedef std::vector<std::vector<Tile *>> Ground;
+typedef std::vector<std::vector<TilePtr>> Ground;
 
 class Map {
 	std::string mapDir;
@@ -14,3 +16,5 @@ public:
 	Ground toTiles();
 	//void replaceTile();
 };
+
+#endif

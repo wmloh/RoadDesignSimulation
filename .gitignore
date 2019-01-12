@@ -1,3 +1,5 @@
 *.pdf
 *.uxf
 *.exe
+*.d
+*.o

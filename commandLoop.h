@@ -1,3 +1,6 @@
+#ifndef COMMANDLOOP_H
+#define COMMANDLOOP_H
+
 #include "simulation.h"
 #include <vector>
 
@@ -16,3 +19,5 @@ private:
 	void help();
 	void printLegend();
 };
+
+#endif

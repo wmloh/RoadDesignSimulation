@@ -1,15 +1,15 @@
-#ifndef HOME_H
-#define HOME_H
+#ifndef HUB_H
+#define HUB_H
 
 #include "tile.h"
 
 class Car;
 
-class Home final : public Tile {
+class Hub final : public Tile {
 	std::queue<Car *> buffer;
 public:
-	Home(int, int);
-	~Home();
+	Hub(int, int);
+	~Hub();
 	void sendCar();
 };
 
