@@ -3,15 +3,15 @@
 
 #include "trigger.h"
 
-class CarAgent;
+class Car;
 
 class TimeStep final : public Trigger {
-	std::vector<CarAgent *> cars;
+	std::vector<Car *> cars;
 public:
 	TimeStep(const int * const step);
 	~TimeStep();
-	void attach(CarAgent *);
-	void detach(CarAgent *);
+	void attach(Car *);
+	void detach(Car *);
 	void notifyObserver() override;
 };
 

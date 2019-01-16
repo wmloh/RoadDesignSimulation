@@ -7,9 +7,10 @@
 #include "car.h"
 #include "csvParser.h"
 #include <fstream>
+#include <sstream>
 
 Map::Map(std::string mapDir, std::string profDir, std::string orderDir) :
-	mapDir{mapDir}, profDir{profDir}, orderDir{orderDir} {}
+	mapDir{mapDir}, profDir{profDir}, orderDir{orderDir}, tileArray{}, size{} {}
 
 Map::~Map() {}
 
@@ -41,6 +42,7 @@ Ground Map::toTiles() {
 	Ground g;
 	std::string line;
 	std::string profile;
+	tileArray.clear();
 
 	int rowCount = 0;
 	int len;
@@ -64,12 +66,11 @@ Ground Map::toTiles() {
 					row.emplace_back(std::make_unique<Hub>(i, rowCount, profile[i] - '0'));
 				} else if(line[i] == '+') {
 					row.emplace_back(std::make_unique<Road>(i, rowCount, profile[i] - '0'));
-				} else if(line[i] == '@') {
-					row.emplace_back(std::make_unique<Car>(i, rowCount));
-					std::cerr << "A car is detected on the map; this will cause simulation to not work as expected" << std::endl;
 				} else if(line[i] != '\r') {
 					throw std::string{"Unrecognized symbol detected on the map: " + std::string{1, line[i]}};
 				}
+				if(line[i] != '\r') tileArray.emplace_back(row.back().get());
+
 			}
 			g.emplace_back(std::move(row));
 			++rowCount;
@@ -77,9 +78,10 @@ Ground Map::toTiles() {
 			mapFs.clear();
 			profFs.clear();
 		}
+		size = len-1;
 
 		// assigning pointers of neighbours
-		attachNeighbours(g, len-1, rowCount);
+		attachNeighbours(g, size, rowCount);
 		
 	} catch(std::string s) {
 		std::cerr << s << std::endl;
@@ -96,4 +98,45 @@ Ground Map::toTiles() {
 	}
 	
 	return std::move(g);
+}
+
+void Map::toOrder(Waiting &wt) {
+	CSVParser cp{orderDir};
+	auto vec = cp.toInt(true);
+	Home *h;
+	Hub *hub;
+	int x, y, desX, desY;
+
+	for(auto &v : vec) {
+		x = v.at(1);
+		y = v.at(2);
+		h = dynamic_cast<Home *>(getTile(x, y));
+		if(!h) {
+			std::ostringstream oss;
+			oss << '(' << x << ',' << y << ')';
+			std::cerr << "Origin of a Car must be a Home" + oss.str() << std::endl;
+			throw "Origin of a Car must be a Home" + oss.str();
+		}
+		
+		desX = v.at(3);
+		desY = v.at(4);
+		hub = dynamic_cast<Hub *>(getTile(desX, desY));
+		if(!hub) {
+			std::ostringstream oss;
+			oss << '(' << desX << ',' << desY << ')';
+			std::cerr << "Destination of a Car must be a Hub" + oss.str() << std::endl;
+			throw "Destination of a Car must be a Hub" + oss.str();
+		}
+
+		h->loadCar(desX, desY, hub);
+
+		wt.attach(v.at(0), h);
+	}
+}
+
+Tile *Map::getTile(int x, int y) {
+	if(!tileArray.empty()) {
+		return tileArray.at(y * size + x);
+	}
+	return nullptr;
 }

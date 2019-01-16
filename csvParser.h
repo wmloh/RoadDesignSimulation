@@ -9,8 +9,8 @@ class CSVParser {
 public:
 	CSVParser(std::string);
 	~CSVParser();
-	std::vector<std::vector<std::string>> toString();
-	std::vector<std::vector<int>> toInt();
+	std::vector<std::vector<std::string>> toString(bool);
+	std::vector<std::vector<int>> toInt(bool);
 };
 
 #endif

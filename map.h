@@ -4,16 +4,20 @@
 #include <iostream>
 #include <vector>
 #include "tile.h"
+#include "waiting.h"
 
 class Map {
 	std::string mapDir;
 	std::string profDir;
 	std::string orderDir;
+	std::vector<Tile *> tileArray;
+	int size;
 public:
 	Map(std::string, std::string, std::string);
 	~Map();
 	Ground toTiles();
-	//toOrder();
+	void toOrder(Waiting &);
+	Tile *getTile(int, int);
 };
 
 #endif

@@ -16,3 +16,7 @@ std::ostream &operator<<(std::ostream &out, Tile &t) {
 	out << t.print();
 	return out;
 }
+
+std::pair<int, int> Tile::getCoord() {
+	return {x, y};
+}

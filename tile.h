@@ -22,6 +22,7 @@ public:
 	friend std::ostream &operator<<(std::ostream &, Tile &);
 protected:
 	virtual std::string print() = 0;
+	std::pair<int, int> getCoord();
 };
 
 #endif

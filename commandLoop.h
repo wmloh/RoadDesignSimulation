@@ -12,6 +12,7 @@ public:
 	CommandLoop();
 	~CommandLoop();
 	void run();
+	void dev();
 	void loadGuide(std::string);
 	void loadLegend(std::string);
 	void loadFiles(std::string, std::string, std::string);

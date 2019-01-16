@@ -11,6 +11,7 @@ Simulation::~Simulation() {
 void Simulation::load(std::string map, std::string profile, std::string order) {
 	auto m = Map{map, profile, order};
 	tiles = m.toTiles();
+	m.toOrder(wt);
 }
 
 void Simulation::init() {

@@ -28,6 +28,8 @@ void CommandLoop::run() {
 				} else {
 					std::cout << "Invalid setStream command" << std::endl;
 				}
+			} else if (command == "dev") {
+				dev();
 			} else if (command == "show") {
 				std::cout << sim;
 			} else if (command == "quit" || command == "q") {
