@@ -8,11 +8,12 @@
 class Map {
 	std::string mapDir;
 	std::string profDir;
+	std::string orderDir;
 public:
-	Map(std::string, std::string);
+	Map(std::string, std::string, std::string);
 	~Map();
 	Ground toTiles();
-	//void replaceTile();
+	//toOrder();
 };
 
 #endif

@@ -1,3 +1,6 @@
+#ifndef CAR_H
+#define CAR_H
+
 #include "tile.h"
 
 class Road;
@@ -7,7 +10,9 @@ class Car final : public Tile {
 public:
 	Car(int, int);
 	~Car();
-private:
 	void setRoad(Road *);
+private:
 	virtual std::string print() override;
 };
+
+#endif

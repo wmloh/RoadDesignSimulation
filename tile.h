@@ -18,8 +18,7 @@ public:
 	Tile(int, int);
 	virtual ~Tile() = 0;
 	std::vector<Tile *> getNeighbours();
-private:
-	void setNeighbours(std::vector<Tile *>);
+	void setNeighbours(Tile *);
 	friend std::ostream &operator<<(std::ostream &, Tile &);
 protected:
 	virtual std::string print() = 0;

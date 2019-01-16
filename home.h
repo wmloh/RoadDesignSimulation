@@ -7,8 +7,9 @@ class Car;
 
 class Home final : public Tile {
 	std::queue<Car *> buffer;
+	int capacity;
 public:
-	Home(int, int);
+	Home(int, int, int);
 	~Home();
 	void sendCar();
 	virtual std::string print() override;

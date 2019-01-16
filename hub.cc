@@ -1,6 +1,6 @@
 #include "hub.h"
 
-Hub::Hub(int x, int y) : Tile{x,y} {}
+Hub::Hub(int x, int y, int cap) : Tile{x,y}, capacity{cap} {}
 
 Hub::~Hub() {}
 

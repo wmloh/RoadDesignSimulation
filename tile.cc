@@ -8,8 +8,8 @@ std::vector<Tile *> Tile::getNeighbours() {
 	return neighbours;
 }
 
-void Tile::setNeighbours(std::vector<Tile *> n) {
-	neighbours = n;
+void Tile::setNeighbours(Tile *t) {
+	neighbours.emplace_back(t);
 }
 
 std::ostream &operator<<(std::ostream &out, Tile &t) {

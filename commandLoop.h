@@ -14,7 +14,7 @@ public:
 	void run();
 	void loadGuide(std::string);
 	void loadLegend(std::string);
-	void loadFiles(std::string, std::string);
+	void loadFiles(std::string, std::string, std::string);
 private:
 	void help();
 	void printLegend();

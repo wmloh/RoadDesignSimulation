@@ -30,16 +30,17 @@ void CommandLoop::run() {
 				}
 			} else if (command == "show") {
 				std::cout << sim;
-			} else if (command == "exit") {
+			} else if (command == "quit" || command == "q") {
 				break;
 			} else {
 				std::cout << "Invalid command; enter \"help\" for more information" << std::endl;
 			}
 		}
 	} catch(std::string s) {
-		std::cout << "Error occurred:" << std::endl << s << std::endl;
-		throw;
+		std::cerr << "Error occurred:" << std::endl << s << std::endl;
+		throw s;
 	} catch(...) {
+		std::cerr << "Unknown error occurred(2)" << std::endl;
 		throw;
 	}
 }
@@ -76,6 +77,6 @@ void CommandLoop::loadLegend(std::string fileName) {
 	}
 }
 
-void CommandLoop::loadFiles(std::string map, std::string profile) {
-	sim.load(map, profile);
+void CommandLoop::loadFiles(std::string map, std::string profile, std::string order) {
+	sim.load(map, profile, order);
 }

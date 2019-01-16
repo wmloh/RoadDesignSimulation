@@ -7,8 +7,9 @@ class Car;
 
 class Hub final : public Tile {
 	std::queue<Car *> buffer;
+	int capacity;
 public:
-	Hub(int, int);
+	Hub(int, int, int);
 	~Hub();
 	void sendCar();
 	virtual std::string print() override;

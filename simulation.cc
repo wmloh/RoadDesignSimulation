@@ -1,19 +1,21 @@
 #include "simulation.h"
 #include "map.h"
 
-Simulation::Simulation() : tiles{}, steps{0}, numRoads{0}, roadCost{0}, stream{"cout"} {}
+Simulation::Simulation() : tiles{}, steps{0}, numRoads{0},
+	roadCost{0}, stream{"cout"}, ts{&steps}, wt{&steps} {}
 
 Simulation::~Simulation() {
 	tiles.clear();
 }
 
-void Simulation::load(std::string map, std::string profile) {
-	auto m = Map{map, profile};
+void Simulation::load(std::string map, std::string profile, std::string order) {
+	auto m = Map{map, profile, order};
 	tiles = m.toTiles();
 }
 
 void Simulation::init() {
-
+	// code
+	++steps;
 }
 
 float Simulation::calculate() {
