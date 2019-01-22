@@ -8,6 +8,7 @@ public:
 	Empty(int, int);
 	~Empty();
 	virtual std::string print() override;
+	bool traversable() override;
 };
 
 #endif

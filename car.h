@@ -5,15 +5,6 @@
 #include <memory>
 #include <queue>
 
-const int NW = 0;
-const int N = 1;
-const int NE = 2;
-const int W = 3;
-const int E = 4;
-const int SW = 5;
-const int S = 6;
-const int SE = 7;
-
 class Road;
 class Hub;
 
@@ -28,7 +19,9 @@ public:
 	~Car();
 	bool getRoute();
 	void setRoad(Road *);
+	Road *getRoad();
 	bool move();
+	friend std::ostream &operator<<(std::ostream &, Car &);
 };
 
 typedef std::unique_ptr<Car> CarPtr;

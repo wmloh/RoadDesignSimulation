@@ -7,3 +7,7 @@ Obst::~Obst() {}
 std::string Obst::print() {
 	return "%";
 }
+
+bool Obst::traversable() {
+	return false;
+}

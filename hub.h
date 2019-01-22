@@ -13,6 +13,7 @@ public:
 	~Hub();
 	void sendCar();
 	virtual std::string print() override;
+	bool traversable() override;
 };
 
 #endif

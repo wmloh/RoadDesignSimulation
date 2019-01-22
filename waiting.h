@@ -20,6 +20,7 @@ public:
 	// simulation optimization
 	void fixState();
 	void reset();
+	std::ostream &print(std::ostream &) override;
 };
 
 #endif

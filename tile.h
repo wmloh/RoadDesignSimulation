@@ -19,10 +19,12 @@ public:
 	virtual ~Tile() = 0;
 	std::vector<Tile *> getNeighbours();
 	void setNeighbours(Tile *);
+	std::pair<int, int> getCoord();
+	virtual bool traversable() = 0;
+
 	friend std::ostream &operator<<(std::ostream &, Tile &);
 protected:
 	virtual std::string print() = 0;
-	std::pair<int, int> getCoord();
 };
 
 #endif

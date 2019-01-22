@@ -13,6 +13,7 @@ public:
 	void attach(Car *);
 	void detach(Car *);
 	void notifyObserver() override;
+	std::ostream &print(std::ostream &) override;
 };
 
 #endif

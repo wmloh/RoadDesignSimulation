@@ -19,6 +19,12 @@ void Simulation::init() {
 	++steps;
 }
 
+bool Simulation::stepRun() {
+	std::cout << "stepped" << std::endl;
+	++steps;
+	return true;
+}
+
 float Simulation::calculate() {
 	return 0;
 }

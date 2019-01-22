@@ -38,3 +38,13 @@ void Waiting::fixState() {
 void Waiting::reset() {
 	homes = backup;
 }
+
+std::ostream &Waiting::print(std::ostream &out) {
+	std::pair<int, int> p;
+	for(auto &h : homes) {
+		out << '[' << h.first << ']' << std::endl;
+		p = h.second->getCoord();
+		out << "Starts at: " << '(' << p.first << ',' << p.second << ')' << std::endl;
+	}
+	return out;
+}

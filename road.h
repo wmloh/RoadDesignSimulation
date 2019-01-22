@@ -15,6 +15,7 @@ public:
 	void acceptCar(Car *);
 	int getCapacity();
 	virtual std::string print() override;
+	bool traversable() override;
 };
 
 #endif

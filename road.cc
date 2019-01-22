@@ -19,3 +19,7 @@ int Road::getCapacity() {
 std::string Road::print() {
 	return "+";
 }
+
+bool Road::traversable() {
+	return true;
+}

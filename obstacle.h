@@ -8,6 +8,7 @@ public:
 	Obst(int, int);
 	~Obst();
 	virtual std::string print() override;
+	bool traversable() override;
 };
 
 #endif

@@ -18,3 +18,12 @@ void TimeStep::notifyObserver() {
 		c->move();
 	}
 }
+
+std::ostream &TimeStep::print(std::ostream &out) {
+	int len = cars.size();
+	for(int i = 0; i < len; ++i) {
+		out << '[' << i << ']' << std::endl;
+		out << *cars.at(i);
+	}
+	return out;
+}

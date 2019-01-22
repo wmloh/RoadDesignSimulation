@@ -20,3 +20,7 @@ void Home::sendCar() {
 std::string Home::print() {
 	return "H";
 }
+
+bool Home::traversable() {
+	return false;
+}
