@@ -5,16 +5,27 @@ Home::Home(int x, int y, int cap) : Tile{x,y}, buffer{}, capacity{cap} {}
 
 Home::~Home() {}
 
-void Home::loadCar(int desX, int desY, Hub *h) {
+void Home::loadCar(int desX, int desY, PathFinder &pf, Hub *hub) {
 	auto coord = getCoord();
 	int x = coord.first;
 	int y = coord.second;
 
-	buffer.emplace(std::make_unique<Car>(x, y, desX, desY, h));
+	auto car = std::make_unique<Car>(x, y, desX, desY, hub, this);
+	car->getRoute(pf);
+	buffer.emplace(std::move(car));
+
+	
+}
+
+void Home::clearBuffer() {
+	while(!buffer.empty()) {
+		buffer.pop();
+	}
 }
 
 void Home::sendCar() {
 	// send a car
+	
 }
 
 std::string Home::print() {

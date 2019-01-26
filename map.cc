@@ -18,9 +18,9 @@ void attachNeighbours(Ground &g, int lenX, int lenY) {
 	int x = 0;
 	int y = 0;
 
-	for(auto &r : g) {
+	for(const auto &r : g) {
 		for(auto &c : r) {
-			for(int i = x - 1; i <= x + 1; ++ i) {
+			for(int i = x - 1; i <= x + 1; ++i) {
 				for(int j = y - 1; j <= y + 1; ++j) {
 					if(i >= 0 && i < lenX && j >= 0 && j < lenY && (i != x || j != y)) {
 						c->setNeighbours(g.at(i).at(j).get());
@@ -29,10 +29,10 @@ void attachNeighbours(Ground &g, int lenX, int lenY) {
 					}
 				}
 			}
-			x++;
+			y++;
 		}
-		y++;
-		x = 0;
+		x++;
+		y = 0;
 	}
 }
 
@@ -128,9 +128,9 @@ void Map::toOrder(Waiting &wt) {
 			throw "Destination of a Car must be a Hub" + oss.str();
 		}
 
-		h->loadCar(desX, desY, hub);
+		//h->loadCar(desX, desY, hub);
 
-		wt.attach(v.at(0), h);
+		wt.attach(v.at(0), desX, desY, h, hub);
 	}
 }
 

@@ -7,21 +7,26 @@
 
 class Road;
 class Hub;
+class PathFinder;
+class Home;
+class CommandLoop;
+class Tile;
 
 class Car {
 	int x, y;
 	std::queue<int> route;
 	std::pair<int, int> dest;
 	Hub *hub;
-	Road *curRoad;
+	Tile *curRoad;
 public:
-	Car(int, int, int, int, Hub *);
+	Car(int, int, int, int, Hub *, Tile *);
 	~Car();
-	bool getRoute();
+	bool getRoute(PathFinder &);
 	void setRoad(Road *);
-	Road *getRoad();
+	Tile *getRoad();
 	bool move();
 	friend std::ostream &operator<<(std::ostream &, Car &);
+	friend class CommandLoop;
 };
 
 typedef std::unique_ptr<Car> CarPtr;

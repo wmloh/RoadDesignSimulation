@@ -3,17 +3,21 @@
 
 #include "trigger.h"
 #include <vector>
+#include "pathFinder.h"
+#include "tile.h"
 
 class Home;
+class Hub;
 
 class Waiting final : public Trigger {
-	std::vector<std::pair<int, Home *>> homes;
-	std::vector<std::pair<int, Home *>> backup;
+	std::vector<std::tuple<int, int, int, Home *, Hub *>> homes;
+	std::vector<std::tuple<int, int, int, Home *, Hub *>> backup;
 	bool fixed;
+	PathFinder pf;
 public:
-	Waiting(const int * const step);
+	Waiting(const int * const step, Ground &g);
 	~Waiting();
-	void attach(int, Home *);
+	void attach(int, int, int, Home *, Hub *);
 	Home * detach();
 	void notifyObserver() override;
 

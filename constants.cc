@@ -1,32 +1,40 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#include "constants.h"
+#include <sstream>
 
-#include <utility>
+int costFunc(int x, int y, int desX, int desY) {
+	int cost = 0;
 
-// Directions
-const int NW = 0;
-const int N = 1;
-const int NE = 2;
-const int W = 3;
-const int E = 4;
-const int SW = 5;
-const int S = 6;
-const int SE = 7;
-const std::pair<int, int> KEYMAPPING[8] = {
-	{-1, -1},
-	{0, -1},
-	{1, -1},
-	{-1, 0},
-	{1, 0},
-	{-1, 1},
-	{0, 1},
-	{1, 1}
-};
+	// diagonal values
+	int min = std::min(std::abs(x - desX), std::abs(y - desY));
+	cost += min * DIAG_COST;
 
-// Cost values
-const int DEFAULT = -1;
-const int NUM_TILES = 8;
-const int ORTHO_COST = 10;
-const int DIAG_COST = 14;
+	// horizontal or vertical values
+	int max = std::max(std::abs(x - desX), std::abs(y - desY));
+	cost += (max - min) * ORTHO_COST;
 
-#endif
+	return cost;
+}
+
+std::string inverseMapping(int i) {
+	switch(i) {
+		case NW:
+			return "NW";
+		case N:
+			return "N";
+		case NE:
+			return "NE";
+		case W:
+			return "W";
+		case E:
+			return "E";
+		case SW:
+			return "SW";
+		case S:
+			return "S";
+		case SE:
+			return "SE";
+	}
+	std::ostringstream oss;
+	oss << i;
+	return "Invalid key" + oss.str();
+}

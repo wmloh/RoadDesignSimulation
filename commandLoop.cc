@@ -1,5 +1,9 @@
 #include "commandLoop.h"
 #include <fstream>
+#include "tile.h"
+#include "road.h"
+#include "home.h"
+#include "constants.h"
 
 CommandLoop::CommandLoop(): guide{}, legend{}, sim{} {}
 
@@ -42,7 +46,7 @@ void CommandLoop::run() {
 		std::cerr << "Error occurred:" << std::endl << s << std::endl;
 		throw s;
 	} catch(...) {
-		std::cerr << "Unknown error occurred(2)" << std::endl;
+		std::cerr << "ERROR (CMD::run)" << std::endl;
 		throw;
 	}
 }
@@ -54,14 +58,74 @@ void CommandLoop::dev() {
 	std::string second;
 	std::string third;
 
-	try {
-		while(std::cin >> command) {
+	
+	while(std::cin >> command) {
+		try {
 			if(command == "get") {
 				std::cin >> second;
 				if(second == "timestep") {
 					std::cout << sim.ts << std::endl;
 				} else if(second == "waiting") {
 					std::cout << sim.wt << std::endl;
+				} else if(second == "car") {
+					int x, y;
+					std::cin >> x;
+					std::cin >> y;
+					Tile *t = sim.tiles.at(y).at(x).get();
+
+					Home *h;
+					Road *r;
+					Car *c;
+					std::queue<int> que;
+					
+					h = dynamic_cast<Home *>(t);
+					if(!h) {
+						r = dynamic_cast<Road *>(t);
+						if(!r) {
+							throw "Selected tile cannot have a car";
+						}
+						// code for roads
+						continue;
+					}
+					
+					c = h->buffer.front().get();
+					que = c->route;
+					
+					std::cout << "Size: " << que.size() << std::endl;
+					while(!que.empty()) {
+						std::cout << inverseMapping(que.front()) << std::endl;
+						que.pop();
+					}
+				} else if(second == "neighbours") {
+					int x, y;
+					std::cin >> x;
+					std::cin >> y;
+					Tile *t = sim.tiles.at(y).at(x).get();
+
+					std::vector<Tile *> neighbours = t->getNeighbours();
+					/*
+					for(int i = 0; i < 3; ++i) {
+						for(int j = 0; j < 3; ++j) {
+							t = neighbours.at(3*i + j);
+							if(t) {
+								std::tie(x, y) = t->getCoord();
+								std::cout << '(' << x << ',' << y << ')' << ' ';
+							} else {
+								std::cout << "----- ";
+							}
+						}
+						std::cout << std::endl;
+					}*/
+
+					for(auto &n : neighbours) {
+						if (n) {
+							std::tie(x, y) = n->getCoord();
+							std::cout << '(' << x << ',' << y << ')' << ' ';
+						} else {
+							std::cout << "----- ";
+						}
+						
+					}
 				} else {
 					std::cout << "Invalid command" << std::endl;
 				}
@@ -89,7 +153,6 @@ void CommandLoop::dev() {
 					} while(sim.stepRun());
 				} catch(std::string s) {
 					std::cerr << s << std::endl;
-					throw;
 				} catch(const std::runtime_error &e) {
 					std::cerr << e.what() << std::endl;
 					throw;
@@ -97,7 +160,7 @@ void CommandLoop::dev() {
 					std::cerr << e.what() << std::endl;
 					throw;
 				} catch(...) {
-					std::cerr << "Unknown error occurred(1)" << std::endl;
+					std::cerr << "ERROR (CMD::dev)" << std::endl;
 					throw;
 				}
 				std::cout << "Step run terminated" << std::endl;
@@ -108,13 +171,12 @@ void CommandLoop::dev() {
 			} else {
 				std::cout << "Invalid command" << std::endl;
 			}
+		} catch(std::string s) {
+			std::cerr << "Error occurred:" << std::endl << s << std::endl;
+		} catch(...) {
+			std::cerr << "Unknown error occurred(3)" << std::endl;
+			throw;
 		}
-	} catch(std::string s) {
-		std::cerr << "Error occurred:" << std::endl << s << std::endl;
-		throw s;
-	} catch(...) {
-		std::cerr << "Unknown error occurred(3)" << std::endl;
-		throw;
 	}
 }
 

@@ -1,21 +1,22 @@
 #include "waiting.h"
 #include "home.h"
 #include <algorithm>
+#include "constants.h" // using constFunc
 
-Waiting::Waiting(const int * const step) : Trigger{step}, homes{},
-	backup{}, fixed{false} {}
+Waiting::Waiting(const int * const step, Ground &g) : Trigger{step}, homes{},
+	backup{}, fixed{false}, pf{g, costFunc} {}
 
 Waiting::~Waiting() {}
 
-void Waiting::attach(int ts, Home *h) {
+void Waiting::attach(int ts, int desX, int desY, Home *h, Hub *hub) {
 	if(!fixed) {
-		homes.emplace_back(std::pair<int, Home *>(ts, h));
+		homes.emplace_back(std::tuple<int, int, int, Home *, Hub *>(ts, desX, desY, h, hub));
 	}
 }
 
 Home * Waiting::detach() {
 	if(fixed) {
-		Home *h = homes.back().second;
+		Home *h = std::get<3>(homes.back());
 		homes.pop_back();
 		return h;
 	}
@@ -23,28 +24,47 @@ Home * Waiting::detach() {
 }
 
 void Waiting::notifyObserver() {
-	while(homes.back().first == getStep()) {
-		homes.back().second->sendCar();
+	while(std::get<0>(homes.back()) == getStep()) {
+		std::get<3>(homes.back())->sendCar();
 		homes.pop_back();
 	}
 }
 
 void Waiting::fixState() {
-	std::sort(homes.begin(), homes.end(), std::greater<std::pair<int, Home *>>());
+	//std::sort(homes.begin(), homes.end(), std::greater<std::tuple<int, int, int, Home *, Hub *>>());
+	std::sort(homes.begin(), homes.end());
 	backup = homes;
 	fixed = true;
+
+	// loading
+	int ts, desX, desY;
+	Home *h;
+	Hub *hub;
+	for(auto &tup : homes) {
+		std::tie(ts, desX, desY, h, hub) = tup;
+		h->loadCar(desX, desY, pf, hub);
+	}
+	
 }
 
 void Waiting::reset() {
 	homes = backup;
+
+	// clearing home buffers
+	Home *h;
+	for(auto &tup : homes) {
+		h = std::get<3>(tup);
+		h->clearBuffer();
+	}
 }
 
 std::ostream &Waiting::print(std::ostream &out) {
 	std::pair<int, int> p;
 	for(auto &h : homes) {
-		out << '[' << h.first << ']' << std::endl;
-		p = h.second->getCoord();
-		out << "Starts at: " << '(' << p.first << ',' << p.second << ')' << std::endl;
+		out << '[' << std::get<0>(h) << ']' << std::endl;
+		p = std::get<3>(h)->getCoord();
+		out << "Starts at: " << '(' << p.first << ',' << p.second << ')';
+		out << " -> " << '(' << std::get<1>(h) << ',' << std::get<2>(h) << ')' << std::endl;
 	}
 	return out;
 }

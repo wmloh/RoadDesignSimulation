@@ -17,7 +17,10 @@ int Road::getCapacity() {
 }
 
 std::string Road::print() {
-	return "+";
+	if(cars.empty()) {
+		return "+";
+	}
+	return "@";
 }
 
 bool Road::traversable() {

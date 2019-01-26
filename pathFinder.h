@@ -17,7 +17,7 @@ class PathFinder {
 public:
 	PathFinder(const Ground &g, int(*funcH)(int, int, int, int));
 	~PathFinder();
-	std::queue<int> findPath(int x, int y, int desX, int desY, Car *);
+	std::queue<int> findPath(int x, int y, int desX, int desY, Car *c);
 private:
 	void insertSorted(OpenContainer &, int, int, Tile *, OpenElement *, int);
 	int getCost(int);

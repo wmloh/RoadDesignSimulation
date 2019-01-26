@@ -2,7 +2,7 @@
 #include "map.h"
 
 Simulation::Simulation() : tiles{}, steps{0}, numRoads{0},
-	roadCost{0}, stream{"cout"}, ts{&steps}, wt{&steps} {}
+	roadCost{0}, stream{"cout"}, ts{&steps}, wt{&steps, tiles} {}
 
 Simulation::~Simulation() {
 	tiles.clear();
@@ -12,15 +12,20 @@ void Simulation::load(std::string map, std::string profile, std::string order) {
 	auto m = Map{map, profile, order};
 	tiles = m.toTiles();
 	m.toOrder(wt);
+	wt.fixState();
 }
 
 void Simulation::init() {
 	// code
-	++steps;
+	while(stepRun()) {
+
+	}
+
 }
 
 bool Simulation::stepRun() {
 	std::cout << "stepped" << std::endl;
+	wt.notifyObserver();
 	++steps;
 	return true;
 }
