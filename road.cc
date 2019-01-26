@@ -12,6 +12,10 @@ void Road::acceptCar(Car *c) {
 	cars.push(c);
 }
 
+int Road::getNumCars() {
+	return cars.size();
+}
+
 int Road::getCapacity() {
 	return capacity;
 }

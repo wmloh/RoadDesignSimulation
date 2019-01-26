@@ -29,7 +29,10 @@ void Home::sendCar() {
 }
 
 std::string Home::print() {
-	return "H";
+	if(buffer.empty()) {
+		return "H";
+	}
+	return "@";
 }
 
 bool Home::traversable() {

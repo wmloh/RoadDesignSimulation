@@ -13,6 +13,7 @@ public:
 	~Road();
 	void moveCar();
 	void acceptCar(Car *);
+	int getNumCars();
 	int getCapacity();
 	virtual std::string print() override;
 	bool traversable() override;
