@@ -41,7 +41,22 @@ Tile *Car::getRoad() {
 }
 
 bool Car::move() {
-	return true;
+	int dir = route.front();
+
+	Tile *t = curRoad->getNeighbours().at(dir);
+	Road *nextRoad = dynamic_cast<Road *>(t);
+
+	if(nextRoad) {
+		int cap = nextRoad->getCapacity();
+		int curSize = nextRoad->getNumRoad();
+		if(curSize < cap) {
+			nextRoad->accept
+		}
+	} else {
+		std::cerr << "Routing algorithm invalid (Car::move)" << std::endl;
+		throw "Error";
+	}
+	return false;
 }
 
 std::ostream &operator<<(std::ostream &out, Car &c) {
