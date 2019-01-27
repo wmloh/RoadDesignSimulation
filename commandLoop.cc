@@ -80,7 +80,6 @@ void CommandLoop::dev() {
 						continue;
 					}
 					
-
 					Home *h;
 					Road *r;
 					Car *c;
@@ -139,6 +138,7 @@ void CommandLoop::dev() {
 				std::cout << "Initialized step run" << std::endl;
 				try {
 					do {
+						std::cout << sim;
 						std::getline(std::cin, second);
 						if(second.empty()) {
 							continue;
