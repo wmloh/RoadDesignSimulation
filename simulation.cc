@@ -28,7 +28,10 @@ bool Simulation::stepRun() {
 	wt.notifyObserver(ts);
 	ts.notifyObserver();
 	++steps;
-	return true;
+	if(wt.getSize() || ts.getSize()) {
+		return true;
+	}
+	return false;
 }
 
 float Simulation::calculate() {

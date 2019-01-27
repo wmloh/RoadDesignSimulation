@@ -1,4 +1,5 @@
 #include "traversable.h"
+#include "constants.h"
 
 Traversable::Traversable(int x, int y, int cap) : Tile{x,y}, cars{}, capacity{cap} {}
 
@@ -8,8 +9,19 @@ void Traversable::acceptCar(CarPtr cp) {
 	cars.push(std::move(cp));
 }
 
-bool Traversable::sendCar(int dir, Car &car) {
+int Traversable::sendCar(int dir, Car &car) {
 	Tile *tile = getNeighbours().at(dir);
+
+	int curX, curY;
+	std::tie(curX, curY) = tile->getCoord();
+	int desX, desY;
+	std::tie(desX, desY) = car.getDest();
+	if(curX == desX && curY == desY) {
+		car.reached();
+		cars.pop();
+		return REACHED;
+	}
+
 	Traversable *t = dynamic_cast<Traversable *>(tile);
 
 	if(!t) {
@@ -22,9 +34,9 @@ bool Traversable::sendCar(int dir, Car &car) {
 		cars.pop();
 		t->acceptCar(std::move(c));
 		car.setRoad(t);
-		return true;
+		return STEPPED;
 	}
-	return false;	
+	return BLOCKED;
 }
 
 int Traversable::getNumCars() {

@@ -22,6 +22,7 @@ public:
 	Home * detach();
 	void notifyObserver() override; // does nothing
 	void notifyObserver(TimeStep &);
+	int getSize() override;
 
 	// simulation optimization
 	void fixState();

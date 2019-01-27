@@ -31,9 +31,15 @@ const int NUM_TILES = 8;
 const int ORTHO_COST = 10;
 const int DIAG_COST = 14;
 
+// Car state values
+const int STEPPED = 0;
+const int BLOCKED = 1;
+const int REACHED = 2;
+
 // Cost function
 int costFunc(int x, int y, int desX, int desY);
 
+// Int to Direction mapping
 std::string inverseMapping(int);
 
 #endif

@@ -24,8 +24,10 @@ public:
 	~Car();
 	bool getRoute(PathFinder &);
 	void setRoad(Traversable *);
+	std::pair<int, int> getDest();
 	Traversable *getRoad();
-	bool move();
+	int move();
+	void reached();
 	friend std::ostream &operator<<(std::ostream &, Car &);
 	friend class CommandLoop;
 };

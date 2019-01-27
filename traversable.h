@@ -12,7 +12,7 @@ public:
 	Traversable(int, int, int);
 	~Traversable();
 	void acceptCar(CarPtr);
-	bool sendCar(int, Car &);
+	int sendCar(int, Car &);
 	int getNumCars();
 	int getCapacity();
 	void clearCars();

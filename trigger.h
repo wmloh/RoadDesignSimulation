@@ -11,6 +11,7 @@ public:
 	Trigger(const int * const step);
 	~Trigger();
 	virtual void notifyObserver() = 0;
+	virtual int getSize() = 0;
 protected:
 	virtual std::ostream &print(std::ostream &) = 0;
 	int getStep() const;

@@ -32,6 +32,10 @@ void Waiting::notifyObserver(TimeStep &ts) {
 	}
 }
 
+int Waiting::getSize() {
+	return homes.size();
+}
+
 void Waiting::fixState() {
 	//std::sort(homes.begin(), homes.end(), std::greater<std::tuple<int, int, int, Home *, Hub *>>());
 	std::sort(homes.begin(), homes.end());
