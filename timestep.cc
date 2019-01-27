@@ -15,7 +15,9 @@ void TimeStep::detach(Car *c) {
 
 void TimeStep::notifyObserver() {
 	for(auto &c : cars) {
-		c->move();
+		if(!c->move()) {
+			std::cout << "Traffic congestion!" << std::endl;
+		}
 	}
 }
 

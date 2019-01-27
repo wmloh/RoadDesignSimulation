@@ -1,20 +1,14 @@
 #ifndef ROAD_H
 #define ROAD_H
 
-#include "tile.h"
+#include "traversable.h"
+#include "car.h"
 
-class Car;
+class Road final : public Traversable {
 
-class Road final : public Tile {
-	int capacity;
-	std::queue<Car *> cars;
 public:
 	Road(int, int, int);
 	~Road();
-	void moveCar();
-	void acceptCar(Car *);
-	int getNumCars();
-	int getCapacity();
 	virtual std::string print() override;
 	bool traversable() override;
 };

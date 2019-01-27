@@ -39,8 +39,8 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 	int childRelX, childRelY;
 	
 	//// DEV TEST ////
-	int X, Y;
-	std::string s;
+	//int X, Y;
+	//std::string s;
 
 	while(!open.empty()) {
 		// selects the front of open set (which has lowest f-score based on invariant)
@@ -50,12 +50,12 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 		std::tie(fScore, gScore, t, prev, dir) = node->pack();
 		closed.insert(std::move(node));
 		
-		std::tie(X, Y) = t->getCoord();
+		/*std::tie(X, Y) = t->getCoord();
 		std::cout << "New openElement selected: " << '(' << X << ',' << Y << ')' << std::endl;
-		std::getline(std::cin, s);
+		std::getline(std::cin, s);*/
 
 
-		std::cout << "Current chain:" << std::endl;
+		/*std::cout << "Current chain:" << std::endl;
 		OpenElement *testNode = nodePtr;
 		while(testNode) {
 			int nodeX = testNode->t->getCoord().first;
@@ -63,7 +63,7 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 			std::cout << '(' << nodeX << ',' << nodeY << ')' << ' ';
 			testNode = testNode->prev;
 		}
-		std::cout << "End chain" << std::endl;
+		std::cout << "End chain" << std::endl;*/
 
 		// checks if reached destination
 		std::tie(curX, curY) = t->getCoord();
@@ -86,13 +86,16 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 			std::tie(childX, childY) = tile->getCoord();
 			if(!tile->traversable() && !(childX == desX && childY == desY)) continue; // destination is not traversable
 
-			std::cout << "DIR: " << inverseMapping(i) << std::endl;
+			int num = i;
+			if(num > 3) --num; // taking into account that index 4 in neighbours is itself
+
+			/*std::cout << "DIR: " << inverseMapping(i) << std::endl;
 			if(tile) std::cout << *tile << std::endl;
 			else std::cout << '0' << std::endl;
 
 			std::tie(X, Y) = tile->getCoord();
 			std::cout << '(' << X << ',' << Y << ')' << std::endl;
-			std::getline(std::cin, s);			
+			std::getline(std::cin, s);*/
 
 			gScoreChild = gScore + getCost(i);
 			std::tie(childRelX, childRelY) = KEYMAPPING[i];
@@ -107,14 +110,11 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 				continue;
 			}
 
-			int num = i;
-			if(num > 3) --num;
-
 			insertSorted(open, fScoreChild, gScoreChild, tile, nodePtr, num);
-			std::cout << '(' << X << ',' << Y << ')' << " inserted into open:" << fScoreChild << ' ' << gScoreChild << ' ' << i << std::endl;
+			/*std::cout << '(' << X << ',' << Y << ')' << " inserted into open:" << fScoreChild << ' ' << gScoreChild << ' ' << i << std::endl;
 			int nodeX = nodePtr->t->getCoord().first;
 			int nodeY = nodePtr->t->getCoord().second;
-			std::cout << "> child of :" << '(' << nodeX << ',' << nodeY << ')' << std::endl;
+			std::cout << "> child of :" << '(' << nodeX << ',' << nodeY << ')' << std::endl;*/
 		}
 	}
 	return {};
@@ -124,7 +124,7 @@ void PathFinder::insertSorted(OpenContainer &open, int fScore, int gScore,
 	Tile *t, OpenElement *prev, int dir) {
 	auto oe = std::make_unique<OpenElement>(fScore, gScore, t, prev, dir);
 	for(auto it = open.begin(); it != open.end(); ++it) {
-		if(fScore <= (*it)->fScore) {
+		if(fScore < (*it)->fScore) {
 			open.insert(it, std::move(oe));
 			return;
 		}
@@ -140,7 +140,6 @@ int PathFinder::getCost(int i) {
 }
 
 std::queue<int> PathFinder::backTrack(OpenElement &oe) {
-	std::cout << "backtracking" << std::endl;
 	std::stack<int> reversed;
 	std::queue<int> directions;
 
@@ -148,7 +147,6 @@ std::queue<int> PathFinder::backTrack(OpenElement &oe) {
 	OpenElement *node = oe.prev;
 	while(node) {
 		reversed.push(node->dir);
-		std::cout << node->dir << std::endl;
 		node = node->prev;
 	}
 

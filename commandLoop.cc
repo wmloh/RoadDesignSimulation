@@ -71,7 +71,15 @@ void CommandLoop::dev() {
 					int x, y;
 					std::cin >> x;
 					std::cin >> y;
-					Tile *t = sim.tiles.at(y).at(x).get();
+
+					Tile *t;
+					try {
+						t = sim.tiles.at(y).at(x).get();
+					} catch(std::out_of_range &e) {
+						std::cerr << "Out of range" << std::endl;
+						continue;
+					}
+					
 
 					Home *h;
 					Road *r;
@@ -82,13 +90,18 @@ void CommandLoop::dev() {
 					if(!h) {
 						r = dynamic_cast<Road *>(t);
 						if(!r) {
-							throw "Selected tile cannot have a car";
+							std::cerr << "Selected tile cannot have a car" << std::endl;
+							continue;
 						}
 						// code for roads
 						continue;
 					}
 					
-					c = h->buffer.front().get();
+					if(h->cars.empty()) {
+						std::cout << "Tile does not contain any cars" << std::endl;
+						continue;
+					}
+					c = h->cars.front().get();
 					que = c->route;
 					
 					std::cout << "Size: " << que.size() << std::endl;
@@ -96,6 +109,7 @@ void CommandLoop::dev() {
 						std::cout << inverseMapping(que.front()) << std::endl;
 						que.pop();
 					}
+
 				} else if(second == "neighbours") {
 					int x, y;
 					std::cin >> x;
@@ -103,7 +117,7 @@ void CommandLoop::dev() {
 					Tile *t = sim.tiles.at(y).at(x).get();
 
 					std::vector<Tile *> neighbours = t->getNeighbours();
-					/*
+					
 					for(int i = 0; i < 3; ++i) {
 						for(int j = 0; j < 3; ++j) {
 							t = neighbours.at(3*i + j);
@@ -115,16 +129,6 @@ void CommandLoop::dev() {
 							}
 						}
 						std::cout << std::endl;
-					}*/
-
-					for(auto &n : neighbours) {
-						if (n) {
-							std::tie(x, y) = n->getCoord();
-							std::cout << '(' << x << ',' << y << ')' << ' ';
-						} else {
-							std::cout << "----- ";
-						}
-						
 					}
 				} else {
 					std::cout << "Invalid command" << std::endl;

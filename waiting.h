@@ -5,6 +5,7 @@
 #include <vector>
 #include "pathFinder.h"
 #include "tile.h"
+#include "timestep.h"
 
 class Home;
 class Hub;
@@ -19,7 +20,8 @@ public:
 	~Waiting();
 	void attach(int, int, int, Home *, Hub *);
 	Home * detach();
-	void notifyObserver() override;
+	void notifyObserver() override; // does nothing
+	void notifyObserver(TimeStep &);
 
 	// simulation optimization
 	void fixState();

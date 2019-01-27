@@ -4,8 +4,9 @@
 #include "constants.h"
 #include "pathFinder.h"
 #include "tile.h"
+#include "traversable.h"
 
-Car::Car(int x, int y, int desX, int desY, Hub *hub, Tile *curRoad) : 
+Car::Car(int x, int y, int desX, int desY, Hub *hub, Traversable *curRoad) : 
 	x{x}, y{y}, route{}, dest{desX, desY}, hub{hub}, curRoad{curRoad} {}
 
 Car::~Car() {}
@@ -32,29 +33,35 @@ bool Car::getRoute(PathFinder &pf) {
 	return false;
 }
 
-void Car::setRoad(Road *r) {
+void Car::setRoad(Traversable *r) {
 	curRoad = r;
 }
 
-Tile *Car::getRoad() {
+Traversable *Car::getRoad() {
 	return curRoad;
 }
 
 bool Car::move() {
 	int dir = route.front();
+	
+	int index = dir;
+	if(index > 3) ++index; // adjusting index of neighbours vector
+	// update curRoad???
+	if(curRoad->sendCar(index, *this)) {
+		int deltaX, deltaY;
+		route.pop();
+		std::tie(deltaX, deltaY) = KEYMAPPING[dir];
+		x += deltaX;
+		y += deltaY;
 
-	Tile *t = curRoad->getNeighbours().at(dir);
-	Road *nextRoad = dynamic_cast<Road *>(t);
-
-	if(nextRoad) {
-		int cap = nextRoad->getCapacity();
-		int curSize = nextRoad->getNumRoad();
-		if(curSize < cap) {
-			nextRoad->accept
+		// check if reached destination
+		int desX, desY;
+		std::tie(desX, desY) = dest;
+		if(desX == x && desY == y) {
+			std::cout << "Target reached!" << std::endl;
 		}
-	} else {
-		std::cerr << "Routing algorithm invalid (Car::move)" << std::endl;
-		throw "Error";
+
+		return true;
 	}
 	return false;
 }

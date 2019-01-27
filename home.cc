@@ -1,7 +1,7 @@
 #include "home.h"
 #include "hub.h"
 
-Home::Home(int x, int y, int cap) : Tile{x,y}, buffer{}, capacity{cap} {}
+Home::Home(int x, int y, int cap) : Traversable{x,y,cap} {}
 
 Home::~Home() {}
 
@@ -12,24 +12,15 @@ void Home::loadCar(int desX, int desY, PathFinder &pf, Hub *hub) {
 
 	auto car = std::make_unique<Car>(x, y, desX, desY, hub, this);
 	car->getRoute(pf);
-	buffer.emplace(std::move(car));
-
-	
+	cars.emplace(std::move(car));
 }
 
-void Home::clearBuffer() {
-	while(!buffer.empty()) {
-		buffer.pop();
-	}
-}
-
-void Home::sendCar() {
-	// send a car
-	
+Car * Home::getCar() {
+	return cars.front().get();
 }
 
 std::string Home::print() {
-	if(buffer.empty()) {
+	if(cars.empty()) {
 		return "H";
 	}
 	return "@";

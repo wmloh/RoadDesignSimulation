@@ -25,7 +25,8 @@ void Simulation::init() {
 
 bool Simulation::stepRun() {
 	std::cout << "stepped" << std::endl;
-	wt.notifyObserver();
+	wt.notifyObserver(ts);
+	ts.notifyObserver();
 	++steps;
 	return true;
 }

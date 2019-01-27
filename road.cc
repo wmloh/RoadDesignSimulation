@@ -1,24 +1,8 @@
 #include "road.h"
 
-Road::Road(int x, int y, int cap) : Tile{x,y}, capacity{cap}, cars{} {}
+Road::Road(int x, int y, int cap) : Traversable{x,y,cap} {}
 
 Road::~Road() {}
-
-void Road::moveCar() {
-	// move car
-}
-
-void Road::acceptCar(Car *c) {
-	cars.push(c);
-}
-
-int Road::getNumCars() {
-	return cars.size();
-}
-
-int Road::getCapacity() {
-	return capacity;
-}
 
 std::string Road::print() {
 	if(cars.empty()) {

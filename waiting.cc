@@ -23,9 +23,11 @@ Home * Waiting::detach() {
 	return nullptr;
 }
 
-void Waiting::notifyObserver() {
+void Waiting::notifyObserver() {}
+
+void Waiting::notifyObserver(TimeStep &ts) {
 	while(std::get<0>(homes.back()) == getStep()) {
-		std::get<3>(homes.back())->sendCar();
+		ts.attach(std::get<3>(homes.back())->getCar());		
 		homes.pop_back();
 	}
 }
@@ -54,7 +56,7 @@ void Waiting::reset() {
 	Home *h;
 	for(auto &tup : homes) {
 		h = std::get<3>(tup);
-		h->clearBuffer();
+		h->clearCars();
 	}
 }
 
