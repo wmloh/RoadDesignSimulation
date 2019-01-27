@@ -11,7 +11,6 @@ class Hub final : public Tile {
 public:
 	Hub(int, int, int);
 	~Hub();
-	void sendCar();
 	virtual std::string print() override;
 	bool traversable() override;
 };

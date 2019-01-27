@@ -3,7 +3,13 @@
 #include <sstream>
 #include <algorithm>
 
-CSVParser::CSVParser(std::string dir) : dir{dir} {}
+CSVParser::CSVParser(std::string dir) {
+	if(dir.substr(dir.size() - 4) != ".csv") {
+		this->dir = dir + ".csv";
+	} else {
+		this->dir = dir;
+	}
+}
 
 CSVParser::~CSVParser() {}
 
