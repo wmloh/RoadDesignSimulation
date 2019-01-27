@@ -52,10 +52,9 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 		
 		/*std::tie(X, Y) = t->getCoord();
 		std::cout << "New openElement selected: " << '(' << X << ',' << Y << ')' << std::endl;
-		std::getline(std::cin, s);*/
+		std::getline(std::cin, s);
 
-
-		/*std::cout << "Current chain:" << std::endl;
+		std::cout << "Current chain:" << std::endl;
 		OpenElement *testNode = nodePtr;
 		while(testNode) {
 			int nodeX = testNode->t->getCoord().first;
@@ -72,7 +71,7 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 		}
 		
 		neighbours = t->getNeighbours();
-		//std::cout << neighbours.size() << std::endl;
+		
 		for(int i = 0; i < 9; ++i) {
 			tile = neighbours.at(i);
 
@@ -89,7 +88,7 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 			int num = i;
 			if(num > 3) --num; // taking into account that index 4 in neighbours is itself
 
-			/*std::cout << "DIR: " << inverseMapping(i) << std::endl;
+			/*std::cout << "DIR: " << inverseMapping(num) << ' ';
 			if(tile) std::cout << *tile << std::endl;
 			else std::cout << '0' << std::endl;
 
@@ -97,15 +96,15 @@ std::queue<int> PathFinder::findPath(int x, int y, int desX, int desY, Car *car)
 			std::cout << '(' << X << ',' << Y << ')' << std::endl;
 			std::getline(std::cin, s);*/
 
-			gScoreChild = gScore + getCost(i);
-			std::tie(childRelX, childRelY) = KEYMAPPING[i];
+			gScoreChild = gScore + getCost(num);
+			std::tie(childRelX, childRelY) = KEYMAPPING[num];
 			fScoreChild = gScoreChild + funcH(childRelX + curX, childRelY + curY, desX, desY);
 
 			auto it = std::find_if(open.begin(), open.end(), 
 				[&tile](std::unique_ptr<OpenElement> &tup) {
 					return tup->t == tile;
 				});
-			if(it != open.end() and gScoreChild > (*it)->gScore) {
+			if(it != open.end() and gScoreChild >= (*it)->gScore) {
 				// if found, and if gScoreChild >= g-score of accessed element, then continue
 				continue;
 			}
@@ -130,10 +129,15 @@ void PathFinder::insertSorted(OpenContainer &open, int fScore, int gScore,
 		}
 	}
 	open.push_back(std::move(oe));
+	/*std::cout << "Current open chain: " << std::endl;
+	for(auto &e : open) {
+		std::cout << e->fScore << std::endl;
+	}
+	std::cout << "end chain" << std::endl;*/
 }
 
 int PathFinder::getCost(int i) {
-	if(i == 0 || i == 2 || i == 5 || i == 7) {
+	if(i == NW || i == NE || i == SW || i == SE) {
 		return DIAG_COST;
 	}
 	return ORTHO_COST;
@@ -154,6 +158,6 @@ std::queue<int> PathFinder::backTrack(OpenElement &oe) {
 		directions.push(reversed.top());
 		reversed.pop();
 	}
-	directions.pop(); // remove DEFAULT value
+	directions.pop(); // removes DEFAULT value
 	return directions;
 }
