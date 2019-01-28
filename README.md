@@ -75,7 +75,7 @@ The commands inside the development mode are:
   * \*ENTER KEY\*  - takes another step of stepRun
 * `quit (q)`               - exits development mode (goes back to the usual CLI)
 
-##Development Process
+## Development Process
 
 ![Process Design](/assets/ProcessDesign.png)
 
@@ -85,20 +85,20 @@ Progress as of *January 27, 2019*:
  - [x] Phase 2
  - [ ] Phase 3
 
-###Phase 1
+### Phase 1
 #### Setting Up Environment
 An environment that is robust has to be made to handle agents and deep learning models. It should integrate well with agents and provide a highly abstract yet efficient interface for the deep learning model to run and train.
 
 Metrics and constants should also be defined well here, while still giving flexible to redefine them.
 
-###Phase 2
-####Creating Intelligent Agent
+### Phase 2
+#### Creating Intelligent Agent
 The agent must have access to realistic amounts of information in the environment. With that, they must possess powerful algorithms to make decision processes to optimize the challenges in the environment.
 
 *As of January 27, 2019*, there are no plans to load a machine learning model into the decision process of the agent, although there could be in future works.
 
-###Phase 3
-####Deep Learning Model
+### Phase 3
+#### Deep Learning Model
 Entering this phase would redefine the objective of this project, from simulating agents in an environment to engineering a design to optimize agents in an environment.
 
 *As of January 27, 2019*, the current plan of attack is using a combination of [Convolutional Neural Network](http://cs231n.github.io/convolutional-networks/) and [Long Short Term Memory (LSTM) networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/).
