@@ -1,6 +1,6 @@
 # Road Design Simulation
 
-*Last updated: January 27, 2019*
+*Last updated: February 6, 2019*
 
 ## Contents
 - [Motivation](#motivation)
@@ -39,6 +39,44 @@ To organize classes that can hold cars, an abstract derived class of `Tile` is c
 **`PathFinder`** is an implementation of the [A* Search Algorithm](https://en.wikipedia.org/wiki/A*_search_algorithm), which is called to find a path for `Car`. **`OpenElement`** is an encapsulation of important data for `PathFinder`, simply for convenience and time efficiency.
 
 ## Usage
+
+### Files
+There are three files that needs to be loaded into the `/datasets` directory:
+
+- map.txt
+- order.csv
+- profile.txt
+
+##### Map
+This is the file that designs the layout of the Ground.
+It must be in a rectangular format containing only:
+
+- % - obstacle
+- \+ - road
+- H - home
+- h - hub
+- &nbsp; &nbsp; - empty (whitespace)
+
+##### Order
+This file specifies where and when a car departs, and where is its destination.
+There are 5 columns in this file, all separated by comma.
+
+- Column 0 - timestep to depart
+- Column 1 - x-coordinate of origin
+- Column 2 - y-coordinate of origin
+- Column 3 - x-coordinate of destination
+- Column 4 - y-coordinate of destination
+
+##### Profile
+The contents of this file have to correspond to the contents of the Map file.
+Each character in this file specifies a certain characteristics of Tiles in its corresponding character in the Map file.
+
+- \+ - maximum capacity of cars the Road can handle
+- H - (currently doesn't mean anything but in later version, this value would mean average cars departing from this Home, and cars will be generated based on Poisson distribution)
+
+For all other symbols, the characters should be defaulted to 0 by convention.
+
+### Main File
 Using the API for basic usage simply requires a *main.cc* with:
 ```
 #include "commandLoop.h"
@@ -51,6 +89,7 @@ int main() {
 }
 ```
 
+### Command Line Interface
 The commands for the interface are:
 
 * `help`      - shows all commands
@@ -59,20 +98,20 @@ The commands for the interface are:
 * `init`      - begins simulation
 * `setStream` - changes output stream (either `cout` or `file NAME_OF_FILE`)
 * `quit (q)`  - quits program
-* `dev`       - enters development modelling
+* `dev`       - enters development mode
 
 The commands inside the development mode are:
 
 * `show`                   - shows all tiles
-* `stepRun`                - runs one round/step of simulation
 * `get timestep`           - get description of cars currently in TimeStep
 * `get waiting`            - get description of cars currently in Waiting
 * `get car <X> <Y>`        - get path of car
 * `get neighbours <X> <Y>` - get neighbour coordinates of Tile at <X>,<Y>
+* `stepRun`                - runs one round/step of simulation
   * `stop`         - stops stepRun
   * `get timestep` - get description of cars currently in TimeStep
   * `get waiting`  - get description of cars currently in Waiting
-  * \*ENTER KEY\*  - takes another step of stepRun
+  * `ENTER KEY`    - takes another step of stepRun
 * `quit (q)`               - exits development mode (goes back to the usual CLI)
 
 ## Development Process
@@ -89,7 +128,7 @@ Progress as of *January 27, 2019*:
 #### Setting Up Environment
 An environment that is robust has to be made to handle agents and deep learning models. It should integrate well with agents and provide a highly abstract yet efficient interface for the deep learning model to run and train.
 
-Metrics and constants should also be defined well here, while still giving flexible to redefine them.
+Metrics and constants should also be defined well here, while still giving flexibility to redefine them.
 
 ### Phase 2
 #### Creating Intelligent Agent
@@ -101,4 +140,6 @@ The agent must have access to realistic amounts of information in the environmen
 #### Deep Learning Model
 Entering this phase would redefine the objective of this project, from simulating agents in an environment to engineering a design to optimize agents in an environment.
 
-*As of January 27, 2019*, the current plan of attack is using a combination of [Convolutional Neural Network](http://cs231n.github.io/convolutional-networks/) and [Long Short Term Memory (LSTM) networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/).
+~~*As of January 27, 2019*, the current plan of attack is using a combination of [Convolutional Neural Network](http://cs231n.github.io/convolutional-networks/) and [Long Short Term Memory (LSTM) networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/).~~
+
+*As of February 6, 2019*, work will begin on using [U-Net](https://arxiv.org/pdf/1505.04597.pdf) for the deep learning model.
