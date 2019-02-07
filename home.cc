@@ -15,6 +15,12 @@ void Home::loadCar(int desX, int desY, PathFinder &pf, Hub *hub) {
 	cars.emplace(std::move(car));
 }
 
+Eigen::Matrix<float, 5, 1> Home::toVector() {
+	Eigen::Matrix<float, 5, 1> m;
+	m << static_cast<float>(getCapacity()), 0, 0, 0, 0;
+	return std::move(m);
+}
+
 Car * Home::getCar() {
 	return cars.front().get();
 }

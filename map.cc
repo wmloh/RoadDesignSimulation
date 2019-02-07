@@ -134,6 +134,10 @@ void Map::toOrder(Waiting &wt) {
 	}
 }
 
+Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, 5> Map::toMatrix() {
+	
+}
+
 Tile *Map::getTile(int x, int y) {
 	if(!tileArray.empty()) {
 		return tileArray.at(y * size + x);

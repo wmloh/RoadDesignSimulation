@@ -19,9 +19,13 @@ public:
 	// calls the getRoute method for Car
 	void loadCar(int, int, PathFinder &, Hub *);
 
+	Eigen::Matrix<float, 5, 1> toVector() override;
+
 	// getter method for first Car in queue
 	Car * getCar();
+
 	bool traversable() override;
+
 	virtual std::string print() override;
 	friend class CommandLoop;
 };

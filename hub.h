@@ -11,6 +11,8 @@ class Hub final : public Tile {
 public:
 	Hub(int, int, int);
 	~Hub();
+
+	Eigen::Matrix<float, 5, 1> toVector() override;
 	virtual std::string print() override;
 	bool traversable() override;
 };

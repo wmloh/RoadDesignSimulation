@@ -5,6 +5,7 @@
 #include <vector>
 #include "tile.h"
 #include "waiting.h"
+#include <Eigen/Dense>
 
 class Map {
 	// path to map file
@@ -30,6 +31,9 @@ public:
 
 	// loads orderDir file into a Waiting object
 	void toOrder(Waiting &);
+
+	// returns the Ground as a matrix
+	Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, 5> toMatrix();
 
 	// getter method to get Tile *
 	Tile *getTile(int, int);

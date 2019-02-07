@@ -5,6 +5,7 @@
 #include <vector>
 #include <queue>
 #include <memory>
+#include <Eigen/Dense>
 
 class Tile;
 
@@ -34,6 +35,9 @@ public:
 
 	// checks if a Car can move to this Tile
 	virtual bool traversable() = 0;
+
+	// returns a vector representation of this Tile
+	virtual Eigen::Matrix<float, 5, 1> toVector() = 0;
 
 	friend std::ostream &operator<<(std::ostream &, Tile &);
 	friend class Simulation;
