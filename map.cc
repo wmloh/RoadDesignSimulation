@@ -134,8 +134,43 @@ void Map::toOrder(Waiting &wt) {
 	}
 }
 
-Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, 5> Map::toMatrix() {
-	
+Tensor Map::toMatrix(Ground &g) {
+	Tensor tensor;
+
+	int xLen = g.size();
+	int yLen = g.at(0).size();
+
+	std::unique_ptr<Eigen::MatrixXf> layer0 = std::make_unique<Eigen::MatrixXf>(xLen, yLen);
+	std::unique_ptr<Eigen::MatrixXf> layer1 = std::make_unique<Eigen::MatrixXf>(xLen, yLen);
+	std::unique_ptr<Eigen::MatrixXf> layer2 = std::make_unique<Eigen::MatrixXf>(xLen, yLen);
+	std::unique_ptr<Eigen::MatrixXf> layer3 = std::make_unique<Eigen::MatrixXf>(xLen, yLen);
+	std::unique_ptr<Eigen::MatrixXf> layer4 = std::make_unique<Eigen::MatrixXf>(xLen, yLen);
+
+	float ele0, ele1, ele2, ele3, ele4;
+	int i = 0;
+	int j = 0;
+
+	for(auto &r : g) {
+		for(auto &c : r) {
+			std::tie(ele0, ele1, ele2, ele3, ele4) = c->toVector();
+			(*layer0)(j,i) = ele0;
+			(*layer1)(j,i) = ele1;
+			(*layer2)(j,i) = ele2;
+			(*layer3)(j,i) = ele3;
+			(*layer4)(j,i) = ele4;
+			++i;
+		}
+		++j;
+		i = 0;
+	}
+
+	tensor[0] = std::move(layer0);
+	tensor[1] = std::move(layer1);
+	tensor[2] = std::move(layer2);
+	tensor[3] = std::move(layer3);
+	tensor[4] = std::move(layer4);
+
+	return tensor;
 }
 
 Tile *Map::getTile(int x, int y) {

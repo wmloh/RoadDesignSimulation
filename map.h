@@ -6,6 +6,10 @@
 #include "tile.h"
 #include "waiting.h"
 #include <Eigen/Dense>
+#include <array>
+
+typedef std::array<std::unique_ptr<Eigen::MatrixXf>, 5> Tensor;
+const int NUM_LAYER = 5;
 
 class Map {
 	// path to map file
@@ -33,7 +37,7 @@ public:
 	void toOrder(Waiting &);
 
 	// returns the Ground as a matrix
-	Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, 5> toMatrix();
+	Tensor toMatrix(Ground &g);
 
 	// getter method to get Tile *
 	Tile *getTile(int, int);
