@@ -12,7 +12,7 @@ public:
 	Hub(int, int, int);
 	~Hub();
 
-	Eigen::Matrix<float, 5, 1> toVector() override;
+	Vec toVector() override;
 	virtual std::string print() override;
 	bool traversable() override;
 };

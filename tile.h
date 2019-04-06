@@ -5,12 +5,13 @@
 #include <vector>
 #include <queue>
 #include <memory>
-#include <Eigen/Dense>
+#include <tuple>
 
 class Tile;
 
 typedef std::unique_ptr<Tile> TilePtr;
 typedef std::vector<std::vector<TilePtr>> Ground;
+typedef std::tuple<float, float, float, float, float> Vec;
 
 class Simulation;
 
@@ -37,7 +38,7 @@ public:
 	virtual bool traversable() = 0;
 
 	// returns a vector representation of this Tile
-	virtual Eigen::Matrix<float, 5, 1> toVector() = 0;
+	virtual Vec toVector() = 0;
 
 	friend std::ostream &operator<<(std::ostream &, Tile &);
 	friend class Simulation;

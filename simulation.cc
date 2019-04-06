@@ -13,14 +13,11 @@ void Simulation::load(std::string map, std::string profile, std::string order) {
 	tiles = m.toTiles();
 	m.toOrder(wt);
 	wt.fixState();
+	m.toMatrix(tiles);
 }
 
 void Simulation::init() {
-	// code
-	while(stepRun()) {
-
-	}
-
+	while(stepRun()) {}
 }
 
 bool Simulation::stepRun() {
