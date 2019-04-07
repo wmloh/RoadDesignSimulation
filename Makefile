@@ -1,8 +1,16 @@
 CXX = g++
 CXXFLAGS = -std=c++14 -g -Wall -MMD
-OBJECTS = main.o commandLoop.o simulation.o map.o constants.o tile.o traversable.o \
-		road.o car.o home.o hub.o obstacle.o empty.o trigger.o timestep.o waiting.o \
-		csvParser.o pathFinder.o openElement.o 
+
+### Categorization of scripts
+
+COMMAND = main.o commandLoop.o 
+CONTROLLER = simulation.o map.o trigger.o timestep.o waiting.o
+UTIL = constants.o csvParser.o
+TILES = tile.o traversable.o road.o car.o home.o hub.o obstacle.o empty.o 
+PATHING = pathFinder.o openElement.o 
+
+OBJECTS = $(COMMAND) $(CONTROLLER) $(UTIL) $(TILES) $(PATHING)
+
 DEPENDS = ${OBJECTS:.o=.d}
 EXEC = main
 
