@@ -1,30 +1,29 @@
 #include "layer.h"
 
-template <int size, int numKernel>
-Layer<size,numKernel>::Layer(std::vector<Layer &> && inputs, std::tuple<int, int, int> outputDim) 
+Layer::Layer(std::vector<Layer *> && inputs, std::pair<int, int> outputDim, int size, int numKernel) 
 	:inputs{std::move(inputs)},
-	 kernelDim{size, std::get<2>(inputs[0].get(0).getOutputDim()), numKernel},
-	 outputDim{std::move(outputDim)}, value{}{}
+	 kernelDim{size, inputs.at(0)->getOutputDim().second, numKernel},
+	 outputDim{outputDim} {}
 
-template <int size, int numKernel>
-Layer<size,numKernel>::~Layer() {}
+Layer::~Layer() {}
 
-template <int size, int numKernel>
-const std::tuple<int, int, int> & Layer<size,numKernel>::getKernelDim() {
+const std::tuple<int, int, int> & Layer::getKernelDim() {
 	return kernelDim;
 }
 
-template <int size, int numKernel>
-const std::pair<int, int> & Layer<size,numKernel>::getOutputDim() {
+const std::pair<int, int> & Layer::getOutputDim() {
 	return outputDim;
 }
 
-template <int size, int numKernel>
-Eigen::ArrayXXf Layer<size,numKernel>::getInputs() {
+Eigen::ArrayXXf &Layer::get() {
+	return value;
+}
+
+Eigen::ArrayXXf Layer::getInputs() {
 	Eigen::ArrayXXf mat;
 
 	for(auto & layer : inputs) {
-		mat += layer.get();
+		mat += layer->get();
 	}
 
 	return mat;

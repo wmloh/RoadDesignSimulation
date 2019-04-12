@@ -6,12 +6,12 @@
 #include <vector>
 #include <tuple>
 
-template <int size, int numKernel> class Layer {
+class Layer {
 // size      - kernel dimension
 // numKernel - number of layer
 protected:
 	// input sources
-	std::vector<Layer &> inputs;
+	std::vector<Layer *> inputs;
 
 	// dimensions of kernel
 	const std::tuple<int, int, int> kernelDim;
@@ -23,20 +23,20 @@ protected:
 	Eigen::ArrayXXf value;
 
 public:
-	Layer(std::vector<Layer &> &&, std::tuple<int, int, int>);
+	Layer(std::vector<Layer *> &&, std::pair<int, int>, int, int);
 	~Layer();
 
 	// performs operation on input
 	virtual void compute() = 0;
-
-	// gets computed output value
-	virtual Eigen::ArrayXXf get() = 0;
 
 	// performs backpropagation and sends error back
 	virtual void update() = 0;
 
 	// performs backpropagation and sends error back recursively
 	virtual void updateRecursive() = 0;
+
+	// gets computed output value
+	Eigen::ArrayXXf &get();
 
 	// getter method for kernel dimension
 	const std::tuple<int, int, int> & getKernelDim();
