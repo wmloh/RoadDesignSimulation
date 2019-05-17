@@ -1,6 +1,7 @@
 #include "commandLoop.h"
 
 int main() {
+	Eigen::initParallel();
 	CommandLoop cmd;
 	cmd.loadGuide("guide.txt");
 	cmd.loadLegend("legend.txt");
