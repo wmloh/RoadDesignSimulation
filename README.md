@@ -142,4 +142,8 @@ Entering this phase would redefine the objective of this project, from simulatin
 
 ~~*As of January 27, 2019*, the current plan of attack is using a combination of [Convolutional Neural Network](http://cs231n.github.io/convolutional-networks/) and [Long Short Term Memory (LSTM) networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/).~~
 
-*As of February 6, 2019*, work will begin on using [U-Net](https://arxiv.org/pdf/1505.04597.pdf) for the deep learning model.
+~~*As of February 6, 2019*, work will begin on using [U-Net](https://arxiv.org/pdf/1505.04597.pdf) for the deep learning model.~~
+
+*As of May 17, 2019*, in `dev-cnn` branch, a basic Convolutional Neural Network framework is currently in progress. The technical details of this CNN should support the [ResNet](https://medium.com/@14prakash/understanding-and-implementing-architectures-of-resnet-and-resnext-for-state-of-the-art-image-cc5d0adf648e) architecture. Monte-Carlo Tree Search functionality will also be implemented to generate data for the CNN to be trained on. These two main features will contribute to the reinforcement learning agent that will be designing the road systems. 
+
+This design is heavily inspired by Google Deepmind's AlphaGo.
