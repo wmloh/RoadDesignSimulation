@@ -8,7 +8,8 @@
 #include <Eigen/Dense>
 #include <array>
 
-typedef std::array<std::unique_ptr<Eigen::MatrixXf>, 5> Tensor;
+typedef std::array<std::unique_ptr<Eigen::MatrixXf>, 5> Tensor; 
+// TODO: To change as std::array is statically allocated at compile-time, and change to ArrayXXf
 const int NUM_LAYER = 5;
 
 class Map {
