@@ -4,23 +4,28 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <vector>
-#include <tuple>
+#include <memory>
+
+typedef std::vector<std::unique_ptr<Eigen::ArrayXXf>> Tensor;
 
 class Layer {
-// size      - kernel dimension
-// numKernel - number of layer
 protected:
 	// input sources
 	std::vector<Layer *> inputs;
 
 	// dimensions of kernel
+	// <kernelSize, kernelRows, kernelDepth>
 	const std::tuple<int, int, int> kernelDim;
 
 	// dimensions of output
+	// <outputSize, outputDepth>
 	const std::pair<int, int> outputDim;
 
+	// summed input tensor
+	Tensor inputMat;
+
 	// computed value
-	Eigen::ArrayXXf value;
+	Tensor value;
 
 public:
 	Layer(std::vector<Layer *> &&, std::pair<int, int>, int, int);
@@ -36,7 +41,7 @@ public:
 	virtual void updateRecursive() = 0;
 
 	// gets computed output value
-	Eigen::ArrayXXf &get();
+	Tensor &get();
 
 	// getter method for kernel dimension
 	const std::tuple<int, int, int> & getKernelDim();
@@ -45,14 +50,16 @@ public:
 	const std::pair<int, int> & getOutputDim();
 
 	// print method
-	virtual void print() = 0;
+	virtual std::string print() = 0;
 
 	// verbose method
 	virtual void verbose() = 0;
 
 protected:
 	// calls get() method from all inputs layers and sums them
-	Eigen::ArrayXXf getInputs();
+	Tensor getInputs();
+
+	friend std::ostream &operator<<(std::ostream &, Layer &);
 
 };
 
