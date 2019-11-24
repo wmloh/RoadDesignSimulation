@@ -6,7 +6,7 @@ class CommandLoop:
     Command line interface for initiating and managing simulations.
     '''
 
-    def __init__(self, guide_path='guide.txt', legend_path='legend.txt'):
+    def __init__(self, guide_path=None, legend_path=None):
         '''
         Constructor for CommandLoop
 
@@ -80,6 +80,9 @@ class CommandLoop:
 
         :return: String - guide text
         '''
+        if not self.guide_path:
+            raise ValueError('Guide text is not loaded')
+
         with open(self.guide_path, 'r') as f:
             help_text = f.read()
         return help_text
@@ -90,6 +93,9 @@ class CommandLoop:
 
         :return: String - legend text
         '''
+        if not self.legend_path:
+            raise ValueError('Legend text is not loaded')
+
         with open(self.legend_path, 'r') as f:
             legend_text = f.read()
         return legend_text
