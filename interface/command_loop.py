@@ -10,8 +10,8 @@ class CommandLoop:
         '''
         Constructor for CommandLoop
 
-        :param guide_path: String - path to guide(help) text file
-        :param legend_path: String - path to legend text file
+        :param guide_path: None/String - path to guide(help) text file
+        :param legend_path: None/String - path to legend text file
         '''
         self.sim = Simulation()
         self.guide_path = guide_path
