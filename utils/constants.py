@@ -1,9 +1,11 @@
-# car state values
+### CAR MOVE STATE VALUES ###
 STEPPED = 0
 BLOCKED = 1
 REACHED = 2
 
-# directions
+### DIRECTIONS ###
+
+# indexing of neighbours
 NW = 0
 N = 1
 NE = 2
@@ -13,6 +15,7 @@ SW = 5
 S = 6
 SE = 7
 
+# relative coordinates of neighbours
 KEYMAPPING = [
     (-1, -1),
     (0, -1),
@@ -24,6 +27,7 @@ KEYMAPPING = [
     (1, 1)
 ]
 
+# constants-to-strings mapping
 INVERSE_DIR = {
     NW: 'NW',
     N: 'N',
@@ -43,6 +47,15 @@ DIAG_COST = 14
 
 
 def cost_function(x, y, desX, desY):
+    '''
+    Computes an approximated Euclidean distance between origin and destination
+
+    :param x: Int - origin x-coordinate
+    :param y: Int - origin y-coordinate
+    :param desX: Int - destination x-coordinate
+    :param desY: Int - destination y-coordinate
+    :return: Int - approximated Euclidean distance as cost
+    '''
     deltaX = abs(x - desX)
     deltaY = abs(y - desY)
 
