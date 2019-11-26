@@ -6,3 +6,5 @@
 *.html
 .idea/
 __pycache__
+references/
+planning/
