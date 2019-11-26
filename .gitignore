@@ -4,3 +4,5 @@
 *.d
 *.o
 *.html
+.idea/
+__pycache__
