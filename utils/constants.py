@@ -39,6 +39,17 @@ INVERSE_DIR = {
     SE: 'SE'
 }
 
+### REPRESENTATIONS
+
+# representation of ground
+HOME_VEC = [1, 0, 0, 0, 0]
+HUB_VEC = [0, 1, 0, 0, 0]
+OBST_VEC = [0, 0, 1, 0, 0]
+ROAD_VEC = [0, 0, 0, 1, 0]
+EMPTY_VEC = [0, 0, 0, 0, 1]
+
+### SCORING
+
 # cost values
 DEFAULT = -1
 NUM_TILES = 8
