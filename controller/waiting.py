@@ -1,5 +1,5 @@
 import warnings
-from search.pathFinder import PathFinder
+from search.path_finder import PathFinder
 from utils.constants import cost_function
 
 TIMESTEP = 0
