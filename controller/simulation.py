@@ -1,7 +1,15 @@
+import numpy as np
+
 from tiles.traversable import Traversable
+from tiles.home import Home
+from tiles.hub import Hub
+from tiles.road import Road
+from tiles.obstacle import Obst
+from tiles.empty import Empty
 from controller.timestep import Timestep
 from controller.waiting import Waiting
 from utils.map_generator import generate_map
+from utils.constants import HOME_VEC, HUB_VEC, OBST_VEC, ROAD_VEC, EMPTY_VEC
 
 
 class Simulation:
@@ -65,6 +73,34 @@ class Simulation:
         :return: float - score of all cars
         '''
         return 0  # TODO: Calculate score
+
+    def get_matrix(self):
+        '''
+        Extracts a mathematical representation of the ground.
+
+        :return: np.array - 3D array of np
+        '''
+        ground = self.ground
+        if ground is not None:
+            matrix = list()
+            for col in ground:
+                vector = list()
+                for tile in col:
+                    if isinstance(tile, Home):
+                        vector.append(HOME_VEC)
+                    elif isinstance(tile, Hub):
+                        vector.append(HUB_VEC)
+                    elif isinstance(tile, Obst):
+                        vector.append(OBST_VEC)
+                    elif isinstance(tile, Road):
+                        vector.append(ROAD_VEC)
+                    elif isinstance(tile, Empty):
+                        vector.append(EMPTY_VEC)
+                matrix.append(vector)
+
+            return np.array(matrix, dtype=np.float16)
+
+        raise ValueError('Simulation is not loaded')
 
     def __str__(self):
         '''
