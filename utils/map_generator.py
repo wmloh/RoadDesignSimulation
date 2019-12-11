@@ -21,7 +21,7 @@ def generate_map(map_fp, profile_fp, order_fp, waiting):
     ground = _to_tiles(map_fp, profile_fp)
 
     # sets the car creation order
-    _to_order(order_fp, ground, waiting)
+    _to_order_from_file(order_fp, ground, waiting)
 
     return np.array(ground)
 
@@ -99,7 +99,7 @@ def _to_tiles(map_fp, profile_fp):
     return ground
 
 
-def _to_order(order_fp, ground, waiting, verbose=True):
+def _to_order_from_file(order_fp, ground, waiting, verbose=False):
     '''
     Attaches ordering of creation of cars to the waiting object based on
     the input text file
@@ -130,3 +130,48 @@ def _to_order(order_fp, ground, waiting, verbose=True):
             print(f'Home: {start_x, start_y} --> Hub: {end_x, end_y}')
 
         waiting.attach(row.timestep, end_x, end_y, home, hub)
+
+
+def _to_order_by_sampling(ground, waiting):
+    '''
+    Builds a sampling function that can be called to sample from the given homes and hubs and automatically
+    loads to the Waiting object
+
+    :param ground: array-like - 2D array of tiles
+    :param waiting: Waiting - reference to the Waiting object
+    :return: (Int) => None - sampling function
+    '''
+
+    sampling_homes = list()
+    sampling_hubs = list()
+
+    # identify homes and hubs that will be sampled from
+    for col, line in enumerate(ground):
+        for row, tile in enumerate(line):
+            if isinstance(tile, Home):
+                sampling_homes.append(tile)
+            elif isinstance(tile, Hub):
+                sampling_hubs.append(tile)
+
+    # define sampling function
+    def sample(beta=2):
+        '''
+        Loads the Waiting object with the cars.
+
+        Note: It is the caller's responsibility to clear the waiting object
+
+        :param beta: float - scale parameter for exponential distribution to get timestep
+        :return: None
+        '''
+        for home in sampling_homes:
+            # Poisson sampling
+            num_drivers = np.random.poisson(home.capacity)
+
+            # random determines hub(s) and timestep(s) with uniform and exponential distribution respectively
+            hubs = np.random.choice(sampling_hubs, size=(num_drivers,))
+            timesteps = np.random.exponential(beta, size=(num_drivers,)).astype(int)
+
+            for ts, hub in zip(hubs, timesteps):
+                waiting.attach((ts, hub.x, hub.y, home, hub))
+
+    return sample
