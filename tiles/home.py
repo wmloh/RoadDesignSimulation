@@ -14,7 +14,7 @@ class Home(Traversable):
 
         :param x: Int - x-coordinate of the tile
         :param y: Int - y-coordinate of the tile
-        :param capacity: Int - maximum number of cars the Home can support
+        :param capacity: Int - number of inhabitants in the house
         '''
         super(Home, self).__init__(x, y, capacity)
 
