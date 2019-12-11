@@ -19,7 +19,6 @@ class Waiting:
         :param simulation: Simulation - reference to simulation object
         '''
         self.homes = list()
-        self.backup = None
         self.simulation = simulation
         self.fixed = False
         self.pathfinder = PathFinder(simulation.ground, cost_function)
@@ -74,8 +73,7 @@ class Waiting:
 
         :return: None
         '''
-        self.homes.sort(key=lambda x: x[0])  # TODO: potential error
-        self.backup = self.homes
+        self.homes.sort(key=lambda x: x[0])
         self.fixed = True
 
         for home in self.homes:
@@ -84,14 +82,11 @@ class Waiting:
 
     def reset(self):
         '''
-        Resets the homes container to the original state.
+        Empties the homes container
 
         :return: None
         '''
-        self.homes = self.backup
-        for home in self.homes:
-            h = home[3]
-            h.clear_cars()
+        self.homes.clear()
 
     def get_size(self):
         '''
