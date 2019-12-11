@@ -67,7 +67,7 @@ class PolicyModel:
         dense_value2 = Dense(64,
                              kernel_initializer=KERNEL_INIT)(rec_value2)
         rec_value3 = PReLU()(dense_value2)
-        dense_value3 = Dense(1, activation='tanh',
+        dense_value3 = Dense(1, activation='tanh',   # might need to change to linear to predict the total reward
                              kernel_initializer=KERNEL_INIT,
                              name='value')(rec_value3)
 
@@ -117,3 +117,14 @@ class PolicyModel:
         rec2 = PReLU()(add1)
 
         return rec2
+
+
+if __name__ == '__main__':
+    import numpy as np
+
+    policy = PolicyModel((3, 3, 1))
+    policy.construct(num_blocks=2)
+
+    policy.train(x=np.array([[[0, 0, 0], [1, 1, 1], [2, 2, 2]]]).reshape(1, 3, 3, 1).astype(np.float32),
+                 y=[[np.array([0, 0, 0, 0, 0, 0, 1, 1, 1, 0]).astype(np.float32)], [np.array([1]).astype(np.float32)]],
+                 epochs=100)
