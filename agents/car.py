@@ -11,7 +11,7 @@ class Car:
     # stores references to all Cars in existence
     all_cars = list()
 
-    def __init__(self, curX, curY, desX, desY, hub, cur_road, id=None):
+    def __init__(self, curX, curY, desX, desY, hub, cur_road, car_id=None):
         '''
         Constructor for a Car agent
 
@@ -32,11 +32,11 @@ class Car:
         self.hub = hub
         self.cur_road = cur_road
 
-        if id is None:
+        if car_id is None:
             self.id = Car.cur_id
             Car.cur_id += 1
         else:
-            self.id = id
+            self.id = car_id
 
         Car.all_cars.append(self)
 
