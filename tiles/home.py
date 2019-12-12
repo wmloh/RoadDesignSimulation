@@ -29,11 +29,14 @@ class Home(Traversable):
         :param desY: Int - y-coordinate of destination
         :param pathfinder: PathFinder - pathfinder reference
         :param hub: Hub - reference for destination hub
-        :return: None
+        :return: Boolean - returns True if and only if there exists a route
         '''
         car = Car(self.x, self.y, desX, desY, hub, self)
-        car.get_route(pathfinder)
-        self.cars.append(car)
+        if car.get_route(pathfinder):  # append only if a route exists
+            self.cars.append(car)
+            return True
+
+        return False  # no route found
 
     def __str__(self):
         if len(self.cars) == 0:

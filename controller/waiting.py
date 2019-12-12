@@ -65,12 +65,13 @@ class Waiting:
             timestep.attach(self.homes[-1][HOME].cars[0])  # TODO: Avoid assuming only one Car agent in a Home
             self.homes.pop()
 
-    def fix_state(self):
+    def fix_state(self, verbose=False):
         '''
         Sorts all tuples in order and loads cars into Home objects.
 
         This should be called before the simulations starts.
 
+        :param verbose: Boolean - if True, print out message when there are no paths for some cars
         :return: None
         '''
         self.homes.sort(key=lambda x: x[0])
@@ -78,7 +79,8 @@ class Waiting:
 
         for home in self.homes:
             ts, desX, desY, h, hub = home
-            h.load_car(desX, desY, self.pathfinder, hub)
+            if not h.load_car(desX, desY, self.pathfinder, hub) and verbose:
+                print(f'Car at {h.get_coord()} does not have a valid path')
 
     def reset(self):
         '''

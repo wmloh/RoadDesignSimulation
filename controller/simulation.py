@@ -44,7 +44,7 @@ class Simulation:
             return True
         return False
 
-    def load(self, map_fp, profile_fp, order_fp):
+    def load(self, map_fp, profile_fp, order_fp, verbose=False):
         '''
         Generates all the tiles and fix_state for the waiting_trigger.
 
@@ -54,7 +54,7 @@ class Simulation:
         :return: None
         '''
         self.ground = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger)
-        self.waiting_trigger.fix_state()
+        self.waiting_trigger.fix_state(verbose=verbose)
 
     def calculate(self):
         '''
