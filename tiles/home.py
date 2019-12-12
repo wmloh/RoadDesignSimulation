@@ -18,20 +18,17 @@ class Home(Traversable):
         '''
         super(Home, self).__init__(x, y, capacity)
 
-    def load_car(self, desX, desY, pathfinder, hub):
+    def load_car(self, car, pathfinder):
         '''
         Determines a route for the car using the pathfinder reference and loads
         the car into the container of this object.
 
         This is the point that constructs a Car agent.
 
-        :param desX: Int - x-coordinate of destination
-        :param desY: Int - y-coordinate of destination
+        :param car: Car - reference to car object to be loaded
         :param pathfinder: PathFinder - pathfinder reference
-        :param hub: Hub - reference for destination hub
         :return: Boolean - returns True if and only if there exists a route
         '''
-        car = Car(self.x, self.y, desX, desY, hub, self)
         if car.get_route(pathfinder):  # append only if a route exists
             self.cars.append(car)
             return True

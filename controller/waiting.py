@@ -2,11 +2,13 @@ import warnings
 from search.pathFinder import PathFinder
 from utils.constants import cost_function
 from utils.priority_queue import PriorityQueue
+from agents.car import Car
 
 # Indices for the tuple
 TIMESTEP = 0
 HOME = 3
 HUB = 4
+CAR = 5
 
 
 class Waiting:
@@ -30,6 +32,8 @@ class Waiting:
         Appends a predefined-structured tuple that represents data from the order text file
         which indicates the order and time to move each car.
 
+        Constructs a Car agent object.
+
         Will raise a non-fatal alert if attempted to attach after being fixed
 
         :param ts: Int - timestep to begin moving a car
@@ -40,7 +44,8 @@ class Waiting:
         :return: None
         '''
         if not self.fixed:
-            self.homes.push((ts, desX, desY, home, hub))
+            car = Car(home.x, home.y, desX, desY, hub, home)
+            self.homes.push((ts, desX, desY, home, hub, car))
         else:
             warnings.warn('Attempted to attach object to Waiting after fixing')
 
@@ -64,10 +69,8 @@ class Waiting:
         '''
         # attaches the car agent to Timestep object whenever it is time for the car to start moving
         #   as specified by order.txt
-        # TODO: Consider using PriorityQueue
         while len(self.homes) and self.homes.top()[TIMESTEP] == self.simulation.steps:
-            home = self.homes.pop()[HOME]
-            timestep.attach(home.cars[0])  # TODO: Avoid assuming only one Car agent in a Home
+            timestep.attach(self.homes.pop()[CAR])
 
     def fix_state(self, verbose=False):
         '''
@@ -81,8 +84,8 @@ class Waiting:
         self.fixed = True
 
         for home in self.homes:
-            ts, desX, desY, h, hub = home
-            if not h.load_car(desX, desY, self.pathfinder, hub) and verbose:
+            ts, desX, desY, h, hub, car = home
+            if not h.load_car(car, self.pathfinder) and verbose:
                 print(f'Car at {h.get_coord()} does not have a valid path')
 
     def reset(self):
