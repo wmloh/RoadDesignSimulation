@@ -47,6 +47,10 @@ class PriorityQueue:
         container = self.container
         key = self.key
 
+        # non-empty check
+        if len(container) == 0:
+            raise IndexError('Pop method called on empty PriorityQueue')
+
         container[0], container[-1] = container[-1], container[0]
         obj = container.pop()  # temporarily stores the object
 

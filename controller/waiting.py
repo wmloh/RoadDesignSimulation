@@ -55,8 +55,8 @@ class Waiting:
 
         :return: Home/None - Home object of tuple that is removed (None if not fixed)
         '''
-        if self.fixed:
-            return self.homes.pop()[3]  # TODO: Enable feature to safely remove objects
+        if self.fixed and len(self.homes):
+            return self.homes.pop()[3]
         return None
 
     def notify_observer(self, timestep):
