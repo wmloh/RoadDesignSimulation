@@ -1,7 +1,9 @@
 import warnings
 from search.pathFinder import PathFinder
 from utils.constants import cost_function
+from utils.priority_queue import PriorityQueue
 
+# Indices for the tuple
 TIMESTEP = 0
 HOME = 3
 HUB = 4
@@ -18,7 +20,7 @@ class Waiting:
 
         :param simulation: Simulation - reference to simulation object
         '''
-        self.homes = list()
+        self.homes = PriorityQueue(key=lambda x: x[0])
         self.simulation = simulation
         self.fixed = False
         self.pathfinder = PathFinder(simulation.ground, cost_function)
@@ -28,6 +30,8 @@ class Waiting:
         Appends a predefined-structured tuple that represents data from the order text file
         which indicates the order and time to move each car.
 
+        Will raise a non-fatal alert if attempted to attach after being fixed
+
         :param ts: Int - timestep to begin moving a car
         :param desX: Int - destination x-coordinate
         :param desY: Int - destination y-coordinate
@@ -36,15 +40,15 @@ class Waiting:
         :return: None
         '''
         if not self.fixed:
-            self.homes.append((ts, desX, desY, home, hub))
+            self.homes.push((ts, desX, desY, home, hub))
         else:
             warnings.warn('Attempted to attach object to Waiting after fixing')
 
     def detach(self):
         '''
-        Removes the last object in homes.
+        Removes the object with the most recent initialization timestep in homes.
 
-        :return: Home/None - Home object of tuple that is removed
+        :return: Home/None - Home object of tuple that is removed (None if not fixed)
         '''
         if self.fixed:
             return self.homes.pop()[3]  # TODO: Enable feature to safely remove objects
@@ -61,9 +65,9 @@ class Waiting:
         # attaches the car agent to Timestep object whenever it is time for the car to start moving
         #   as specified by order.txt
         # TODO: Consider using PriorityQueue
-        while len(self.homes) and self.homes[-1][TIMESTEP] == self.simulation.steps:
-            timestep.attach(self.homes[-1][HOME].cars[0])  # TODO: Avoid assuming only one Car agent in a Home
-            self.homes.pop()
+        while len(self.homes) and self.homes.top()[TIMESTEP] == self.simulation.steps:
+            home = self.homes.pop()[HOME]
+            timestep.attach(home.cars[0])  # TODO: Avoid assuming only one Car agent in a Home
 
     def fix_state(self, verbose=False):
         '''
@@ -74,7 +78,6 @@ class Waiting:
         :param verbose: Boolean - if True, print out message when there are no paths for some cars
         :return: None
         '''
-        self.homes.sort(key=lambda x: x[0])
         self.fixed = True
 
         for home in self.homes:
