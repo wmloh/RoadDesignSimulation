@@ -98,6 +98,14 @@ class PriorityQueue:
         '''
         return len(self.container) == 0
 
+    def clear(self):
+        '''
+        Clear the container
+
+        :return: None
+        '''
+        self.container.clear()
+
     def __iter__(self):
         return self.container.__iter__()
 
