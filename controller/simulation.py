@@ -51,6 +51,7 @@ class Simulation:
         :param map_fp: String - file path to the map file
         :param profile_fp: String - file path to profile file
         :param order_fp: String - file path to order file
+        :param verbose: Boolean - if True, print out message when there are no paths for some cars
         :return: None
         '''
         self.ground = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger)
