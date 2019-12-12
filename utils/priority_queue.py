@@ -1,8 +1,8 @@
 class PriorityQueue:
     __doc__ = '''
-    Class for a min priority queue with customizations for the A* search algorithm (using heaps)
+    Class for a min priority queue (using heaps)
     
-    Time complexity:
+    Time complexity of methods:
     * push - O(log n)
     * pop - O(log n)
     
@@ -81,6 +81,14 @@ class PriorityQueue:
             if key(ele) == item:
                 return ele
         return None
+
+    def top(self):
+        '''
+        Returns a reference to the object at the top of the heap (lowest key)
+
+        :return: <OBJECT_TYPE> - object stored at the top
+        '''
+        return self.container[0]
 
     def empty(self):
         '''
