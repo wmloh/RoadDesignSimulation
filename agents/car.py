@@ -21,7 +21,7 @@ class Car:
         :param desY: Int - destination y-coordinate
         :param hub: Hub - reference to the destination hub
         :param cur_road: Home - home that contains the car initially (can be Traversable during the simulation)
-        :param id: None/String/Int - a printable object used as identification of a car
+        :param car_id: None/String/Int - a printable object used as identification of a car
                                      (None means a default id will be assigned)
         '''
         self.curX = curX

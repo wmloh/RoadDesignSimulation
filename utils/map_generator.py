@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-def generate_map(map_fp, profile_fp, order_fp, waiting):
+def generate_map(map_fp, profile_fp, order_fp, waiting, sample=False):
     '''
     Generates a 2D-array object of tiles from reading the text files specified.
 
@@ -15,15 +15,21 @@ def generate_map(map_fp, profile_fp, order_fp, waiting):
     :param profile_fp: String - path to text file containing details of each Tile (capacity)
     :param order_fp: String - path to text file containing car origin and destination
     :param waiting: Waiting - reference to waiting object
+    :param sample: Boolean - enable random sampling (as opposed to loading order_fp)
     :return: np.ndarray - 2D array of tiles for the simulation
     '''
     # forms the ground
     ground = _to_tiles(map_fp, profile_fp)
 
-    # sets the car creation order
-    _to_order_from_file(order_fp, ground, waiting)
+    if sample:
+        sampling_func = _to_order_by_sampling(ground, waiting)
 
-    return np.array(ground)
+        return np.array(ground), sampling_func
+    else:
+        # sets the car creation order
+        _to_order_from_file(order_fp, ground, waiting)
+
+        return np.array(ground)
 
 
 def _attach_neighbours(ground, lenX, lenY):

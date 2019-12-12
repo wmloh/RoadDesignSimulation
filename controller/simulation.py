@@ -44,18 +44,25 @@ class Simulation:
             return True
         return False
 
-    def load(self, map_fp, profile_fp, order_fp, verbose=False):
+    def load(self, map_fp, profile_fp, order_fp, sample=False, verbose=False):
         '''
         Generates all the tiles and fix_state for the waiting_trigger.
 
         :param map_fp: String - file path to the map file
         :param profile_fp: String - file path to profile file
         :param order_fp: String - file path to order file
+        :param sample - Boolean - enable random sampling
         :param verbose: Boolean - if True, print out message when there are no paths for some cars
-        :return: None
+        :return: None/(Int) => None - returns sampling function if sample=True else None
         '''
-        self.ground = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger)
-        self.waiting_trigger.fix_state(verbose=verbose)
+        if sample:
+            self.ground, sampling_func = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger, sample=True)
+            self.waiting_trigger.fix_state(verbose=verbose)
+
+            return sampling_func
+        else:
+            self.ground = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger)
+            self.waiting_trigger.fix_state(verbose=verbose)
 
     def calculate(self):
         '''
