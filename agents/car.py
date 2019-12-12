@@ -44,16 +44,13 @@ class Car:
         '''
         Uses a PathFinder object to get the route.
 
-        Will raise a RuntimeError if no route can be found.
-
         :param pathfinder: PathFinder - reference to a pathfinder object
-        :return: True
+        :return: Boolean - returns True if and only if there is a path to destination
         '''
         self.route = pathfinder.find_path(self.curX, self.curY, self.desX, self.desY, self)
 
         if not self.route:
-            # TODO: Consider changing to a boolean signal
-            raise RuntimeError(f'Ensure that car at {self.curX, self.curY} has access to roads')
+            return False
 
         return True
 
@@ -101,4 +98,16 @@ class Car:
                  f'Path distance: {len(self.route)}'
         return output
 
+    @classmethod
+    def delete_all(cls):
+        '''
+        Removes all car in the current simulation, including references of the car in Traversable tiles
 
+        :return: None
+        '''
+        for car in cls.all_cars:
+            car.cur_road.cars.clear()
+            del car
+
+        cls.all_cars.clear()
+        cls.cur_id = 0
