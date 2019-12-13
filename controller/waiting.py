@@ -3,6 +3,8 @@ from search.pathFinder import PathFinder
 from utils.constants import cost_function
 from utils.priority_queue import PriorityQueue
 from agents.car import Car
+from tiles.home import Home
+from tiles.hub import Hub
 
 # Indices for the tuple
 TIMESTEP = 0
@@ -44,6 +46,11 @@ class Waiting:
         :return: None
         '''
         if not self.fixed:
+            if not isinstance(home, Home):
+                raise ValueError(f'Expected Home tile but given {type(home)}')
+            elif not isinstance(hub, Hub):
+                raise ValueError(f'Expected Hub tile but given {type(hub)}')
+
             car = Car(home.x, home.y, desX, desY, hub, home)
             self.homes.push((ts, desX, desY, home, hub, car))
         else:
@@ -95,6 +102,7 @@ class Waiting:
         :return: None
         '''
         self.homes.clear()
+        self.fixed = False
 
     def get_size(self):
         '''
@@ -106,8 +114,8 @@ class Waiting:
 
     def __str__(self):
         homes_list = list()
-        for home in self.homes:
-            home_string = f'[{home[0]}]\nStarts at: {home[3].get_coord()} -> ({home[1]}, {home[2]})'
+        for home in sorted(self.homes.container, key=lambda x: x[0]):
+            home_string = f'[{home[TIMESTEP]}] Car ({home[CAR].id}) starts at: {home[HOME].get_coord()} -> {home[HUB].get_coord()}'
             homes_list.append(home_string)
 
         return '\n'.join(homes_list)
