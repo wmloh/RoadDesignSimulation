@@ -1,3 +1,4 @@
+from tiles.traversable import Traversable
 from utils.constants import STEPPED, KEYMAPPING
 
 
@@ -70,7 +71,7 @@ class Car:
         :return: Int - state representation of result of the move
         '''
         if not self.route:
-            raise RuntimeError(f'Route is empty but Car.move is called on {self.curX, self.curY}')
+            raise RuntimeError(f'Route is empty but Car.move is called on Car {self.id} at {self.curX, self.curY}')
 
         direction = self.route[0]
         # calibrates the direction because the discrepancy between the neighbours and direction
@@ -98,10 +99,20 @@ class Car:
                  f'Path distance: {len(self.route)}'
         return output
 
+    def _debug_check_route(self):
+        cur_tile = self.cur_road
+
+        for direction in self.route:
+            index = direction if direction <= 3 else direction + 1
+
+            cur_tile = cur_tile.neighbours[index]
+            if not isinstance(cur_tile, Traversable):
+                raise ValueError('Invalid route in Car.route; path includes non-Traversable tiles')
+
     @classmethod
     def delete_all(cls):
         '''
-        Removes all car in the current simulation, including references of the car in Traversable tiles
+        Removes all cars in the current simulation, including references of the car in Traversable tiles
 
         :return: None
         '''
@@ -111,3 +122,8 @@ class Car:
 
         cls.all_cars.clear()
         cls.cur_id = 0
+
+    @classmethod
+    def _debug_check_route_all_cas(cls):
+        for car in cls.all_cars:
+            car._debug_check_route()
