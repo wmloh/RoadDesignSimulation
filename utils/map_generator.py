@@ -13,7 +13,7 @@ def generate_map(map_fp, profile_fp, order_fp, waiting, sample=False):
 
     :param map_fp: String - path to text file containing map layout
     :param profile_fp: String - path to text file containing details of each Tile (capacity)
-    :param order_fp: String - path to text file containing car origin and destination
+    :param order_fp: String/None - path to text file containing car origin and destination (None if sample=True)
     :param waiting: Waiting - reference to waiting object
     :param sample: Boolean - enable random sampling (as opposed to loading order_fp)
     :return: np.ndarray - 2D array of tiles for the simulation
@@ -171,13 +171,13 @@ def _to_order_by_sampling(ground, waiting):
         '''
         for home in sampling_homes:
             # Poisson sampling
-            num_drivers = np.random.poisson(home.capacity)
+            num_drivers = np.random.poisson(home.capacity / 2)
 
             # random determines hub(s) and timestep(s) with uniform and exponential distribution respectively
             hubs = np.random.choice(sampling_hubs, size=(num_drivers,))
             timesteps = np.random.exponential(beta, size=(num_drivers,)).astype(int)
 
-            for ts, hub in zip(hubs, timesteps):
-                waiting.attach((ts, hub.x, hub.y, home, hub))
+            for hub, ts in zip(hubs, timesteps):
+                waiting.attach(ts, hub.x, hub.y, home, hub)
 
     return sample
