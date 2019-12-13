@@ -2,6 +2,7 @@ from tiles.traversable import Traversable
 from controller.timestep import Timestep
 from controller.waiting import Waiting
 from utils.map_generator import generate_map
+from agents.car import Car
 
 
 class Simulation:
@@ -50,14 +51,13 @@ class Simulation:
 
         :param map_fp: String - file path to the map file
         :param profile_fp: String - file path to profile file
-        :param order_fp: String - file path to order file
+        :param order_fp: String/None - file path to order file (None if sample=True)
         :param sample - Boolean - enable random sampling
         :param verbose: Boolean - if True, print out message when there are no paths for some cars
         :return: None/(Int) => None - returns sampling function if sample=True else None
         '''
         if sample:
             self.ground, sampling_func = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger, sample=True)
-            self.waiting_trigger.fix_state(verbose=verbose)
 
             return sampling_func
         else:
@@ -73,6 +73,16 @@ class Simulation:
         :return: float - score of all cars
         '''
         return 0  # TODO: Calculate score
+
+    def reset(self):
+        '''
+        Removes all instances of car agents in the simulation
+
+        :return: None
+        '''
+        Car.delete_all()
+        self.waiting_trigger.reset()
+        self.timestep_trigger.reset()
 
     def __str__(self):
         '''
