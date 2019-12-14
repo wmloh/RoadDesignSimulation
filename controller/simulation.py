@@ -83,6 +83,7 @@ class Simulation:
         Car.delete_all()
         self.waiting_trigger.reset()
         self.timestep_trigger.reset()
+        self.steps = 0
 
     def __str__(self):
         '''

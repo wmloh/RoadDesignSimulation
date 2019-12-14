@@ -46,6 +46,14 @@ class Timestep:
             elif state == REACHED:
                 self.detach(car)
 
+    def reset(self):
+        '''
+        Empties all cars in the cars container
+
+        :return: None
+        '''
+        self.cars.clear()
+
     def get_size(self):
         '''
         Gets the number of active cars for convenience.
