@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from tiles.tile import Tile
 from collections import deque
 from utils.constants import REACHED, BLOCKED, STEPPED

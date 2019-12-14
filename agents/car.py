@@ -100,6 +100,17 @@ class Car:
         return output
 
     def _debug_check_route(self):
+        '''
+        *DEBUG METHOD*
+
+        Traces through the loaded route for this car and raises a ValueError if it will move to a
+        non-Traversable tile. Will raise a ValueError if the route is not loaded.
+
+        :return: None
+        '''
+        if self.route is None:
+            raise ValueError(f'Car {self.id}\'s route is not loaded')
+
         cur_tile = self.cur_road
 
         for direction in self.route:
@@ -124,6 +135,13 @@ class Car:
         cls.cur_id = 0
 
     @classmethod
-    def _debug_check_route_all_cas(cls):
+    def _debug_check_route_all_cars(cls):
+        '''
+        *DEBUG METHOD*
+
+        Raises a ValueError if any car in the current simulation will move to a non-Traversable tile
+
+        :return: None
+        '''
         for car in cls.all_cars:
             car._debug_check_route()
