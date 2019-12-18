@@ -6,7 +6,7 @@ from interface.training_simulation import TrainingSimulation
 
 if __name__ == '__main__':
     # reads config.ini
-    config = ConfigParser(allow_no_value=True)
+    config = ConfigParser()
     config.read('config.ini')
     config = convert_parameters(config)
 
