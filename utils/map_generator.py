@@ -160,18 +160,19 @@ def _to_order_by_sampling(ground, waiting):
                 sampling_hubs.append(tile)
 
     # define sampling function
-    def sample(beta=2):
+    def sample(capacity_scale=0.25, beta=2):
         '''
         Loads the Waiting object with the cars.
 
         Note: It is the caller's responsibility to clear the waiting object
 
+        :param capacity_scale: float - scale parameter for mean of Poisson distribution
         :param beta: float - scale parameter for exponential distribution to get timestep
         :return: None
         '''
         for home in sampling_homes:
             # Poisson sampling
-            num_drivers = np.random.poisson(home.capacity / 2)
+            num_drivers = np.random.poisson(home.capacity * capacity_scale)
 
             # random determines hub(s) and timestep(s) with uniform and exponential distribution respectively
             hubs = np.random.choice(sampling_hubs, size=(num_drivers,))

@@ -28,4 +28,4 @@ if __name__ == '__main__':
             train_sim.visualize_samples(**config['TRAIN_VISUALIZE'])
 
         if config['TRAIN_CONTROL_FLOW']['generate']:
-            pass  # TODO: Incomplete
+            generated_sims = train_sim.generate_samples(**config['TRAIN_GENERATE'])
