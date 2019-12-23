@@ -15,6 +15,13 @@ class Empty(Tile):
         '''
         super(Empty, self).__init__(x, y)
 
+    def to_vector(self):
+        '''
+        Returns a vector representation of this tile
+        :return: list(Int) - vector of 5 dimensions
+        '''
+        return [0, 0, 0, 0, 1]
+
     def __str__(self):
         return ' '
 

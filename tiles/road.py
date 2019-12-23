@@ -16,6 +16,13 @@ class Road(Traversable):
         '''
         super(Road, self).__init__(x, y, capacity)
 
+    def to_vector(self):
+        '''
+        Returns a vector representation of this tile
+        :return: list(Int) - vector of 5 dimensions
+        '''
+        return [0, 0, 0, self.capacity, 0]
+
     def __str__(self):
         if len(self.cars) == 0:
             return '+'

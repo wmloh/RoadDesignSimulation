@@ -94,16 +94,7 @@ class Simulation:
             for col in ground:
                 vector = list()
                 for tile in col:
-                    if isinstance(tile, Home):
-                        vector.append(HOME_VEC)
-                    elif isinstance(tile, Hub):
-                        vector.append(HUB_VEC)
-                    elif isinstance(tile, Obst):
-                        vector.append(OBST_VEC)
-                    elif isinstance(tile, Road):
-                        vector.append(ROAD_VEC)
-                    elif isinstance(tile, Empty):
-                        vector.append(EMPTY_VEC)
+                    vector.append(tile.to_vector())
                 matrix.append(vector)
 
             return np.array(matrix, dtype=np.float16)

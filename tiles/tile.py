@@ -36,7 +36,11 @@ class Tile(ABC):
         return (self.x, self.y)
 
     @abstractmethod
-    def __str__(self):
+    def to_vector(self):
+        '''
+        Returns a vector representation of this tile
+        :return: list(Int) - vector of 5 dimensions
+        '''
         raise NotImplementedError()
 
     @abstractmethod
@@ -45,4 +49,8 @@ class Tile(ABC):
         Return whether cars can drive to this tile
         :return: Boolean
         '''
+        raise NotImplementedError()
+
+    @abstractmethod
+    def __str__(self):
         raise NotImplementedError()

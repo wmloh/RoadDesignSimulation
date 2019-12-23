@@ -35,6 +35,13 @@ class Home(Traversable):
 
         return False  # no route found
 
+    def to_vector(self):
+        '''
+        Returns a vector representation of this tile
+        :return: list(Int) - vector of 5 dimensions
+        '''
+        return [self.capacity, 0, 0, 0, 0]
+
     def __str__(self):
         if len(self.cars) == 0:
             return 'H'
