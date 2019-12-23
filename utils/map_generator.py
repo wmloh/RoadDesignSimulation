@@ -7,23 +7,29 @@ import pandas as pd
 import numpy as np
 
 
-def generate_map(map_fp, profile_fp, order_fp, waiting):
+def generate_map(map_fp, profile_fp, order_fp, waiting, sample=False):
     '''
     Generates a 2D-array object of tiles from reading the text files specified.
 
     :param map_fp: String - path to text file containing map layout
     :param profile_fp: String - path to text file containing details of each Tile (capacity)
-    :param order_fp: String - path to text file containing car origin and destination
+    :param order_fp: String/None - path to text file containing car origin and destination (None if sample=True)
     :param waiting: Waiting - reference to waiting object
+    :param sample: Boolean - enable random sampling (as opposed to loading order_fp)
     :return: np.ndarray - 2D array of tiles for the simulation
     '''
     # forms the ground
     ground = _to_tiles(map_fp, profile_fp)
 
-    # sets the car creation order
-    _to_order(order_fp, ground, waiting)
+    if sample:
+        sampling_func = _to_order_by_sampling(ground, waiting)
 
-    return np.array(ground)
+        return np.array(ground), sampling_func
+    else:
+        # sets the car creation order
+        _to_order_from_file(order_fp, ground, waiting)
+
+        return np.array(ground)
 
 
 def _attach_neighbours(ground, lenX, lenY):
@@ -99,7 +105,7 @@ def _to_tiles(map_fp, profile_fp):
     return ground
 
 
-def _to_order(order_fp, ground, waiting, verbose=True):
+def _to_order_from_file(order_fp, ground, waiting, verbose=False):
     '''
     Attaches ordering of creation of cars to the waiting object based on
     the input text file
@@ -130,3 +136,49 @@ def _to_order(order_fp, ground, waiting, verbose=True):
             print(f'Home: {start_x, start_y} --> Hub: {end_x, end_y}')
 
         waiting.attach(row.timestep, end_x, end_y, home, hub)
+
+
+def _to_order_by_sampling(ground, waiting):
+    '''
+    Builds a sampling function that can be called to sample from the given homes and hubs and automatically
+    loads to the Waiting object
+
+    :param ground: array-like - 2D array of tiles
+    :param waiting: Waiting - reference to the Waiting object
+    :return: (Int) => None - sampling function
+    '''
+
+    sampling_homes = list()
+    sampling_hubs = list()
+
+    # identify homes and hubs that will be sampled from
+    for col, line in enumerate(ground):
+        for row, tile in enumerate(line):
+            if isinstance(tile, Home):
+                sampling_homes.append(tile)
+            elif isinstance(tile, Hub):
+                sampling_hubs.append(tile)
+
+    # define sampling function
+    def sample(capacity_scale=0.25, beta=2):
+        '''
+        Loads the Waiting object with the cars.
+
+        Note: It is the caller's responsibility to clear the waiting object
+
+        :param capacity_scale: float - scale parameter for mean of Poisson distribution
+        :param beta: float - scale parameter for exponential distribution to get timestep
+        :return: None
+        '''
+        for home in sampling_homes:
+            # Poisson sampling
+            num_drivers = np.random.poisson(home.capacity * capacity_scale)
+
+            # random determines hub(s) and timestep(s) with uniform and exponential distribution respectively
+            hubs = np.random.choice(sampling_hubs, size=(num_drivers,))
+            timesteps = np.random.exponential(beta, size=(num_drivers,)).astype(int)
+
+            for hub, ts in zip(hubs, timesteps):
+                waiting.attach(ts, hub.x, hub.y, home, hub)
+
+    return sample

@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from tiles.tile import Tile
 from collections import deque
 from utils.constants import REACHED, BLOCKED, STEPPED
@@ -49,7 +48,8 @@ class Traversable(Tile):
         if curX == desX and curY == desY:
             # arrived at destination
             car.reached()
-            self.cars.popleft()  # assumes cars move in a sequential order
+            car.cur_road = tile
+            self.cars.remove(car)
             return REACHED
 
         if not isinstance(tile, Traversable):
@@ -57,9 +57,9 @@ class Traversable(Tile):
             raise ValueError(f'Invalid routing in Traversable.send_car; arrived at {type(tile)}')
 
         if len(tile.cars) < tile.capacity:
-            moved_car = self.cars.popleft()  # assumes cars move in a sequential order
-            moved_car.cur_road = tile
-            tile.accept_car(moved_car)
+            self.cars.remove(car)
+            car.cur_road = tile
+            tile.accept_car(car)
             return STEPPED
         # implicit else condition
         return BLOCKED
