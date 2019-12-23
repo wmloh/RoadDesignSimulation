@@ -70,7 +70,4 @@ def cost_function(x, y, desX, desY):
     deltaX = abs(x - desX)
     deltaY = abs(y - desY)
 
-    cost = min(deltaX, deltaY) * DIAG_COST
-    cost += (max(deltaX, deltaY) - cost) * ORTHO_COST
-
-    return cost
+    return min(deltaX, deltaY) * DIAG_COST + abs(deltaX - deltaY) * ORTHO_COST

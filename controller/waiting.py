@@ -1,10 +1,16 @@
 import warnings
 from search.path_finder import PathFinder
 from utils.constants import cost_function
+from utils.priority_queue import PriorityQueue
+from agents.car import Car
+from tiles.home import Home
+from tiles.hub import Hub
 
+# Indices for the tuple
 TIMESTEP = 0
 HOME = 3
 HUB = 4
+CAR = 5
 
 
 class Waiting:
@@ -18,8 +24,7 @@ class Waiting:
 
         :param simulation: Simulation - reference to simulation object
         '''
-        self.homes = list()
-        self.backup = None
+        self.homes = PriorityQueue(key=lambda x: x[0])
         self.simulation = simulation
         self.fixed = False
         self.pathfinder = PathFinder(simulation.ground, cost_function)
@@ -29,6 +34,10 @@ class Waiting:
         Appends a predefined-structured tuple that represents data from the order text file
         which indicates the order and time to move each car.
 
+        Constructs a Car agent object.
+
+        Will raise a non-fatal alert if attempted to attach after being fixed
+
         :param ts: Int - timestep to begin moving a car
         :param desX: Int - destination x-coordinate
         :param desY: Int - destination y-coordinate
@@ -37,18 +46,24 @@ class Waiting:
         :return: None
         '''
         if not self.fixed:
-            self.homes.append((ts, desX, desY, home, hub))
+            if not isinstance(home, Home):
+                raise ValueError(f'Expected Home tile but given {type(home)}')
+            elif not isinstance(hub, Hub):
+                raise ValueError(f'Expected Hub tile but given {type(hub)}')
+
+            car = Car(home.x, home.y, desX, desY, hub, home)
+            self.homes.push((ts, desX, desY, home, hub, car))
         else:
             warnings.warn('Attempted to attach object to Waiting after fixing')
 
     def detach(self):
         '''
-        Removes the last object in homes.
+        Removes the object with the most recent initialization timestep in homes.
 
-        :return: Home/None - Home object of tuple that is removed
+        :return: Home/None - Home object of tuple that is removed (None if not fixed)
         '''
-        if self.fixed:
-            return self.homes.pop()[3]  # TODO: Enable feature to safely remove objects
+        if self.fixed and len(self.homes):
+            return self.homes.pop()[HOME]
         return None
 
     def notify_observer(self, timestep):
@@ -61,37 +76,33 @@ class Waiting:
         '''
         # attaches the car agent to Timestep object whenever it is time for the car to start moving
         #   as specified by order.txt
-        # TODO: Consider using PriorityQueue
-        while len(self.homes) and self.homes[-1][TIMESTEP] == self.simulation.steps:
-            timestep.attach(self.homes[-1][HOME].cars[0])  # TODO: Avoid assuming only one Car agent in a Home
-            self.homes.pop()
+        while len(self.homes) and self.homes.top()[TIMESTEP] == self.simulation.steps:
+            timestep.attach(self.homes.pop()[CAR])
 
-    def fix_state(self):
+    def fix_state(self, verbose=False):
         '''
         Sorts all tuples in order and loads cars into Home objects.
 
         This should be called before the simulations starts.
 
+        :param verbose: Boolean - if True, print out message when there are no paths for some cars
         :return: None
         '''
-        self.homes.sort(key=lambda x: x[0])  # TODO: potential error
-        self.backup = self.homes
         self.fixed = True
 
         for home in self.homes:
-            ts, desX, desY, h, hub = home
-            h.load_car(desX, desY, self.pathfinder, hub)
+            ts, desX, desY, h, hub, car = home
+            if not h.load_car(car, self.pathfinder) and verbose:
+                print(f'Car at {h.get_coord()} does not have a valid path')
 
     def reset(self):
         '''
-        Resets the homes container to the original state.
+        Empties the homes container
 
         :return: None
         '''
-        self.homes = self.backup
-        for home in self.homes:
-            h = home[3]
-            h.clear_cars()
+        self.homes.clear()
+        self.fixed = False
 
     def get_size(self):
         '''
@@ -103,8 +114,8 @@ class Waiting:
 
     def __str__(self):
         homes_list = list()
-        for home in self.homes:
-            home_string = f'[{home[0]}]\nStarts at: {home[3].get_coord()} -> ({home[1]}, {home[2]})'
+        for home in sorted(self.homes.container, key=lambda x: x[0]):
+            home_string = f'[{home[TIMESTEP]}] Car ({home[CAR].id}) starts at: {home[HOME].get_coord()} -> {home[HUB].get_coord()}'
             homes_list.append(home_string)
 
         return '\n'.join(homes_list)

@@ -10,6 +10,7 @@ from controller.timestep import Timestep
 from controller.waiting import Waiting
 from utils.map_generator import generate_map
 from utils.constants import HOME_VEC, HUB_VEC, OBST_VEC, ROAD_VEC, EMPTY_VEC
+from agents.car import Car
 
 
 class Simulation:
@@ -52,17 +53,24 @@ class Simulation:
             return True
         return False
 
-    def load(self, map_fp, profile_fp, order_fp):
+    def load(self, map_fp, profile_fp, order_fp, sample=False, verbose=False):
         '''
         Generates all the tiles and fix_state for the waiting_trigger.
 
         :param map_fp: String - file path to the map file
         :param profile_fp: String - file path to profile file
-        :param order_fp: String - file path to order file
-        :return: None
+        :param order_fp: String/None - file path to order file (None if sample=True)
+        :param sample - Boolean - enable random sampling
+        :param verbose: Boolean - if True, print out message when there are no paths for some cars
+        :return: None/(Int) => None - returns sampling function if sample=True else None
         '''
-        self.ground = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger)
-        self.waiting_trigger.fix_state()
+        if sample:
+            self.ground, sampling_func = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger, sample=True)
+
+            return sampling_func
+        else:
+            self.ground = generate_map(map_fp, profile_fp, order_fp, self.waiting_trigger)
+            self.waiting_trigger.fix_state(verbose=verbose)
 
     def calculate(self):
         '''
@@ -101,6 +109,17 @@ class Simulation:
             return np.array(matrix, dtype=np.float16)
 
         raise ValueError('Simulation is not loaded')
+
+    def reset(self):
+        '''
+        Removes all instances of car agents in the simulation
+
+        :return: None
+        '''
+        Car.delete_all()
+        self.waiting_trigger.reset()
+        self.timestep_trigger.reset()
+        self.steps = 0
 
     def __str__(self):
         '''

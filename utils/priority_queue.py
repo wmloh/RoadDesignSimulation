@@ -1,8 +1,8 @@
 class PriorityQueue:
     __doc__ = '''
-    Class for a min priority queue with customizations for the A* search algorithm (using heaps)
+    Class for a min priority queue (using heaps)
     
-    Time complexity:
+    Time complexity of methods:
     * push - O(log n)
     * pop - O(log n)
     
@@ -47,6 +47,10 @@ class PriorityQueue:
         container = self.container
         key = self.key
 
+        # non-empty check
+        if len(container) == 0:
+            raise IndexError('Pop method called on empty PriorityQueue')
+
         container[0], container[-1] = container[-1], container[0]
         obj = container.pop()  # temporarily stores the object
 
@@ -82,6 +86,14 @@ class PriorityQueue:
                 return ele
         return None
 
+    def top(self):
+        '''
+        Returns a reference to the object at the top of the heap (lowest key)
+
+        :return: <OBJECT_TYPE> - object stored at the top
+        '''
+        return self.container[0]
+
     def empty(self):
         '''
         Function to check if empty for convenience
@@ -89,6 +101,14 @@ class PriorityQueue:
         :return: Boolean - returns True if and only if empty
         '''
         return len(self.container) == 0
+
+    def clear(self):
+        '''
+        Clear the container
+
+        :return: None
+        '''
+        self.container.clear()
 
     def __iter__(self):
         return self.container.__iter__()

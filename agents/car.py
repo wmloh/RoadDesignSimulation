@@ -1,3 +1,4 @@
+from tiles.traversable import Traversable
 from utils.constants import STEPPED, KEYMAPPING
 
 
@@ -11,7 +12,7 @@ class Car:
     # stores references to all Cars in existence
     all_cars = list()
 
-    def __init__(self, curX, curY, desX, desY, hub, cur_road, id=None):
+    def __init__(self, curX, curY, desX, desY, hub, cur_road, car_id=None):
         '''
         Constructor for a Car agent
 
@@ -21,7 +22,7 @@ class Car:
         :param desY: Int - destination y-coordinate
         :param hub: Hub - reference to the destination hub
         :param cur_road: Home - home that contains the car initially (can be Traversable during the simulation)
-        :param id: None/String/Int - a printable object used as identification of a car
+        :param car_id: None/String/Int - a printable object used as identification of a car
                                      (None means a default id will be assigned)
         '''
         self.curX = curX
@@ -32,11 +33,11 @@ class Car:
         self.hub = hub
         self.cur_road = cur_road
 
-        if id is None:
+        if car_id is None:
             self.id = Car.cur_id
             Car.cur_id += 1
         else:
-            self.id = id
+            self.id = car_id
 
         Car.all_cars.append(self)
 
@@ -44,16 +45,13 @@ class Car:
         '''
         Uses a PathFinder object to get the route.
 
-        Will raise a RuntimeError if no route can be found.
-
         :param pathfinder: PathFinder - reference to a pathfinder object
-        :return: True
+        :return: Boolean - returns True if and only if there is a path to destination
         '''
         self.route = pathfinder.find_path(self.curX, self.curY, self.desX, self.desY, self)
 
         if not self.route:
-            # TODO: Consider changing to a boolean signal
-            raise RuntimeError(f'Ensure that car at {self.curX, self.curY} has access to roads')
+            return False
 
         return True
 
@@ -73,7 +71,7 @@ class Car:
         :return: Int - state representation of result of the move
         '''
         if not self.route:
-            raise RuntimeError(f'Route is empty but Car.move is called on {self.curX, self.curY}')
+            raise RuntimeError(f'Route is empty but Car.move is called on Car {self.id} at {self.curX, self.curY}')
 
         direction = self.route[0]
         # calibrates the direction because the discrepancy between the neighbours and direction
@@ -101,4 +99,49 @@ class Car:
                  f'Path distance: {len(self.route)}'
         return output
 
+    def _debug_check_route(self):
+        '''
+        *DEBUG METHOD*
 
+        Traces through the loaded route for this car and raises a ValueError if it will move to a
+        non-Traversable tile. Will raise a ValueError if the route is not loaded.
+
+        :return: None
+        '''
+        if self.route is None:
+            raise ValueError(f'Car {self.id}\'s route is not loaded')
+
+        cur_tile = self.cur_road
+
+        for direction in self.route:
+            index = direction if direction <= 3 else direction + 1
+
+            cur_tile = cur_tile.neighbours[index]
+            if not isinstance(cur_tile, Traversable):
+                raise ValueError('Invalid route in Car.route; path includes non-Traversable tiles')
+
+    @classmethod
+    def delete_all(cls):
+        '''
+        Removes all cars in the current simulation, including references of the car in Traversable tiles
+
+        :return: None
+        '''
+        for car in cls.all_cars:
+            car.cur_road.cars.clear()
+            del car
+
+        cls.all_cars.clear()
+        cls.cur_id = 0
+
+    @classmethod
+    def _debug_check_route_all_cars(cls):
+        '''
+        *DEBUG METHOD*
+
+        Raises a ValueError if any car in the current simulation will move to a non-Traversable tile
+
+        :return: None
+        '''
+        for car in cls.all_cars:
+            car._debug_check_route()

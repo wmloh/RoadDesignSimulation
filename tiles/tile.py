@@ -37,7 +37,7 @@ class Tile(ABC):
 
     @abstractmethod
     def __str__(self):
-        return ''
+        raise NotImplementedError()
 
     @abstractmethod
     def traversable(self):
@@ -45,4 +45,4 @@ class Tile(ABC):
         Return whether cars can drive to this tile
         :return: Boolean
         '''
-        return False
+        raise NotImplementedError()

@@ -72,7 +72,7 @@ class CommandLoop:
                 print('Invalid command; enter "help" for more information')
 
     def load_files(self, map_fp, profile_fp, order_fp):
-        self.sim.load(map_fp, profile_fp, order_fp)
+        self.sim.load(map_fp, profile_fp, order_fp, verbose=True)
 
     def help(self):
         '''
